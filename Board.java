@@ -68,7 +68,7 @@ public class Board extends JPanel
       }
     }
   }
-
+ 
   public void newGame() {
     // set pawns
     for (int col = 0; col < COLUMNS; col++) {
