@@ -20,15 +20,17 @@ public class Board extends JPanel {
   public void drawBoard() {
     for (int i = 0; i < ROWS; i++) {
       for (int j = 0; j < COLUMNS ; j++) {
+        
         JLabel label = new JLabel();
         label.setOpaque(true);
         if ((i + j) % 2 == 0) label.setBackground(Color.white);
+        else label.setBackground(Color.black);
         add(label);
       }
     }
+  }
 
-    public void newGame() {
-      //add pieces to board
-    }
+  public void newGame() {
+    //add pieces to board
   }
 }

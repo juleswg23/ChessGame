@@ -3,5 +3,4 @@ abstract class Piece {
   public int yPosition;
 
   public abstract void move();
-  public abstract void
 }
