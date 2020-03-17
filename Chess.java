@@ -16,5 +16,7 @@ public class Chess {
     JFrame frame = new JFrame("Chess");
     frame.setPreferredSize(new Dimension(WIDTH, HEIGHT));
     Board board = new Board();
+
+    
   }
 }
