@@ -6,26 +6,35 @@ import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 
-public class Board extends JPanel {
+public class Board extends JPanel
+{
 
   public final int ROWS = 8;
   public final int COLUMNS = 8;
+  public final int WIDTH = 512;
+  public final int HEIGHT = 512;
+  public final int CELL_SIZE = WIDTH/8;
+
 
   public Board() {
     super();
-    this.setLayout(new GridLayout(ROWS, COLUMNS));
-    drawBoard();
+    this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
   }
 
-  public void drawBoard() {
+  @Override
+  public void paintComponent(Graphics g) {
+      drawBoard(g);
+  }
+//TODO Add drawing of pieces
+  public void drawBoard(Graphics g) {
     for (int i = 0; i < ROWS; i++) {
       for (int j = 0; j < COLUMNS ; j++) {
-        
-        JLabel label = new JLabel();
-        label.setOpaque(true);
-        if ((i + j) % 2 == 0) label.setBackground(Color.white);
-        else label.setBackground(Color.black);
-        add(label);
+        if ((i + j) % 2 == 0) {
+          g.setColor(Color.white);
+        } else {
+          g.setColor(new Color(128,128,128));
+        }
+        g.fillRect(i*CELL_SIZE, j*CELL_SIZE, CELL_SIZE, CELL_SIZE);
       }
     }
   }
