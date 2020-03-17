@@ -1,8 +1,8 @@
 public class Rook extends Piece
 {
   public Rook(int c, int r, boolean t) {
-    columnPos = r;
-    rowPos = c;
+    columnPos = c;
+    rowPos = r;
     white = t;
   }
 
@@ -13,4 +13,7 @@ public class Rook extends Piece
     else return false;
   }
 
+  public String toString() {
+    return "R";
+  }
 }

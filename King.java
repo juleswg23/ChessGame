@@ -1,8 +1,8 @@
 public class King extends Piece
 {
   public King(int c, int r, boolean t) {
-    columnPos = r;
-    rowPos = c;
+    columnPos = c;
+    rowPos = r;
     white = t;
   }
 
@@ -14,5 +14,8 @@ public class King extends Piece
     else return true;
   }
 
+  public String toString() {
+    return "K";
+  }
 
 }

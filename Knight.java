@@ -1,8 +1,8 @@
 public class Knight extends Piece
 {
   public Knight(int c, int r, boolean t) {
-    columnPos = r;
-    rowPos = c;
+    columnPos = c;
+    rowPos = r;
     white = t;
   }
 
@@ -12,6 +12,10 @@ public class Knight extends Piece
     else if (Math.abs(columnPos-newC) == 1 && Math.abs(rowPos - newR) == 2) return true;
     else if (Math.abs(columnPos-newC) == 2 && Math.abs(rowPos - newR) == 1) return true;
     else return false;
+  }
+
+  public String toString() {
+    return "N";
   }
 
 }

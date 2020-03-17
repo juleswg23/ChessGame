@@ -1,8 +1,8 @@
 public class Pawn extends Piece
 {
   public Pawn(int c, int r, boolean t) {
-    columnPos = r;
-    rowPos = c;
+    columnPos = c;
+    rowPos = r;
     white = t;
   }
 
@@ -34,6 +34,10 @@ public class Pawn extends Piece
       }
     }
     return false;
+  }
+
+  public String toString() {
+    return "P";
   }
 
 

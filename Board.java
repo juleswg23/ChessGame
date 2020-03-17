@@ -5,6 +5,8 @@
 import java.util.*;
 import java.awt.*;
 import javax.swing.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class Board extends JPanel
 {
@@ -15,28 +17,46 @@ public class Board extends JPanel
   public final int HEIGHT = 512;
   public final int CELL_SIZE = WIDTH/8;
 
-  private Square[][] boardState;
+  public int firstClickRow;
+  public int firstClickColumn;
+  public int secondClickRow;
+  public int secondClickColumn;
+  public boolean clicked = false;
+
+  private Square[][] boardState = new Square[ROWS][COLUMNS];
 
 
   public Board() {
     super();
     this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+    newEmptyBoard();
+    newGame();
+    // createMouseListener();
   }
 
   @Override
   public void paintComponent(Graphics g) {
-      drawBoard(g);
+      drawBoard(g, boardState);
   }
-//TODO Add drawing of pieces
-  public void drawBoard(Graphics g) {
+
+  public void drawBoard(Graphics g, Square[][] boardState) {
     for (int row = 0; row < ROWS; row++) {
-      for (int col = 0; col < COLUMNS ; col++) {
+      for (int col = 0; col < COLUMNS; col++) {
+
         if ((row + col) % 2 == 0) {
-          g.setColor(Color.white);
+          g.setColor(new Color(189,183,107));
         } else {
-          g.setColor(new Color(128,128,128));
+          g.setColor(new Color(139,69,19));
         }
-        g.fillRect(row*CELL_SIZE, col*CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        g.fillRect((col)*CELL_SIZE, (7 - row)*CELL_SIZE, CELL_SIZE, CELL_SIZE);
+
+        // if a piece exists, print it
+        if (boardState[col][row].getPiece() != null) {
+          Piece p = boardState[col][row].getPiece();
+          if (p.getWhite()) g.setColor(Color.white);
+          else g.setColor(Color.black);
+          g.drawString(p.toString(), col*CELL_SIZE+CELL_SIZE/2, (7 - row)*CELL_SIZE+CELL_SIZE/2);
+        }
       }
     }
   }
@@ -80,7 +100,78 @@ public class Board extends JPanel
     boardState[3][7].setPiece(new Queen(3, 7, false));
 
     // kings
-    boardState[4][0].setPiece(new Queen(4, 0, true));
-    boardState[4][7].setPiece(new Queen(4, 7, false));
+    boardState[4][0].setPiece(new King(4, 0, true));
+    boardState[4][7].setPiece(new King(4, 7, false));
   }
+
+  // public void createMouseListener() {
+  //     MouseListener mouseListener = new MouseListener() {
+  //         @Override
+  //         public void mouseClicked(MouseEvent mouseEvent) {
+  //
+  //         }
+  //         @Override
+  //           public void mousePressed(MouseEvent e) {
+  //               int c = e.getX() % CELL_SIZE;
+  //               int r = e.getY() % CELL_SIZE;
+  //               System.out.println(c + "," + r);
+  //               if (!clicked && boardState[c][r].getPiece() != null) {
+  //                 firstClickRow = r;
+  //                 firstClickColumn = c;
+  //               } else if (clicked && boardState[c][r].getPiece() != null) {
+  //
+  //               } else if (clicked && boardState[c][r].getPiece() == null) {
+  //
+  //               }
+  //           }
+  //
+  //           @Override
+  //           public void mouseReleased(MouseEvent mouseEvent) {
+  //
+  //           }
+  //
+  //           @Override
+  //           public void mouseEntered(MouseEvent mouseEvent) {
+  //
+  //           }
+  //
+  //           @Override
+  //           public void mouseExited(MouseEvent mouseEvent) {
+  //
+  //           }
+  //     };
+  //     this.addMouseListener(mouseListener);
+  // }
+
+  // public boolean isLegal(int origCol, int origRow, int destCol, int destRow) {
+  //   if (boardState[origCol][origRow].getPiece() == null) {
+  //     return false;
+  //   }
+  //   boolean legalByPiece = boardState[origCol][origRow].getPiece().isLegal(destCol, destRow);
+  //   boolean legalByBoard = false;
+  //
+  //   switch (boardState[origCol][origRow].getPiece().toString()) {
+  //     case "K":
+  //       //do something
+  //       break;
+  //     case "Q":
+  //       //
+  //       break;
+  //     case "B":
+  //       //do something
+  //       break;
+  //     case "N":
+  //       // do something
+  //       break;
+  //     case "R":
+  //       //do something
+  //       break;
+  //     case "P":
+  //       //do something
+  //       break;
+  //   }
+  //
+  //   return legalByPiece && legalByBoard;
+  // }
+
 }
