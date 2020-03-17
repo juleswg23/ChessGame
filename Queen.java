@@ -1,9 +1,25 @@
 public class Queen extends Piece
 {
-  public Queen(int x, int y, boolean t) {
-    xPosition = x;
-    yPosition = y;
+  public Queen(int c, int r, boolean t) {
+    columnPos = r;
+    rowPos = c;
     white = t;
+  }
+
+  public boolean isLegal(int newC, int newR) {
+    if (newC > 7 || newC < 0 || newR > 7 || newR < 0) return false;
+    else if (newC == columnPos && newR == rowPos) return false;
+
+    boolean diagonal = false;
+    boolean horizontal_vertical = false;
+//Check for diagonal move
+    if ((columnPos + rowPos) % 2 == (newC + newR % 2)) {
+      if (Math.abs(columnPos - newC) == Math.abs(rowPos - newR)) diagonal = true;
+    }
+//Check for horizontal/vertical move
+    if (newC == columnPos || newR == rowPos) horizontal_vertical = true;
+
+    return diagonal || horizontal_vertical;
   }
 
 

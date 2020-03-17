@@ -1,24 +1,24 @@
 public class Square {
 
-  private final int xPosition;
-  private final int yPosition;
+  private final int columnPos;
+  private final int rowPos;
   private Piece piece;
 
-  public Square(int x, int y, Piece p) {
-    xPosition = x;
-    yPosition = y;
+  public Square(int c, int r, Piece p) {
+    columnPos = c;
+    rowPos = r;
     piece = p;
   }
 
-  public Square(int x, int y) {
-    this(x, y, null);
+  public Square(int c, int r) {
+    this(c, r, null);
   }
 
   public Piece getPiece() {
     return piece;
   }
 
-  public Piece setPiece(Piece p) {
+  public void setPiece(Piece p) {
     piece = p;
   }
 

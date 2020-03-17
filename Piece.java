@@ -1,11 +1,14 @@
 abstract class Piece
 {
-  public int xPosition;
-  public int yPosition;
+  public int columnPos;
+  public int rowPos;
   public boolean white;
 
-  public abstract boolean isLegal();
-  // public abstract void move();
-  // public abstract void captured();
+  public abstract boolean isLegal(int newC, int newR);
+
+  public void setPos(int newC, int newR) {
+    columnPos = newC;
+    rowPos = newR;
+  }
 
 }

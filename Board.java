@@ -29,31 +29,58 @@ public class Board extends JPanel
   }
 //TODO Add drawing of pieces
   public void drawBoard(Graphics g) {
-    for (int i = 0; i < ROWS; i++) {
-      for (int j = 0; j < COLUMNS ; j++) {
-        if ((i + j) % 2 == 0) {
+    for (int row = 0; row < ROWS; row++) {
+      for (int col = 0; col < COLUMNS ; col++) {
+        if ((row + col) % 2 == 0) {
           g.setColor(Color.white);
         } else {
           g.setColor(new Color(128,128,128));
         }
-        g.fillRect(i*CELL_SIZE, j*CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        g.fillRect(row*CELL_SIZE, col*CELL_SIZE, CELL_SIZE, CELL_SIZE);
       }
     }
   }
 
   public void newEmptyBoard() {
-    for (int i = 0; i < ROWS; i++) {
-      for (int j = 0; j < COLUMNS; j++) {
-        boardState[i][j] = new Square(i, j);
+    for (int row = 0; row < ROWS; row++) {
+      for (int col = 0; col < COLUMNS; col++) {
+        boardState[col][row] = new Square(col, row);
       }
     }
   }
 
   public void newGame() {
-
     // set pawns
-    for (int j = 0; j < COLUMNS; j++) {
-      boardState[1][j].setPiece(new )
+    for (int col = 0; col < COLUMNS; col++) {
+      // white pawns then black ones
+      boardState[col][1].setPiece(new Pawn(col, 1, true));
+      boardState[col][6].setPiece(new Pawn(col, 6, false));
     }
+
+    // rooks
+    boardState[0][0].setPiece(new Rook(0, 0, true));
+    boardState[7][0].setPiece(new Rook(7, 0, true));
+    boardState[0][7].setPiece(new Rook(0, 7, false));
+    boardState[7][7].setPiece(new Rook(7, 7, false));
+
+    // knights
+    boardState[1][0].setPiece(new Knight(1, 0, true));
+    boardState[6][0].setPiece(new Knight(6, 0, true));
+    boardState[1][7].setPiece(new Knight(1, 7, false));
+    boardState[6][7].setPiece(new Knight(6, 7, false));
+
+    // bishops
+    boardState[2][0].setPiece(new Bishop(2, 0, true));
+    boardState[5][0].setPiece(new Bishop(5, 0, true));
+    boardState[2][7].setPiece(new Bishop(2, 7, false));
+    boardState[5][7].setPiece(new Bishop(5, 7, false));
+
+    // queens
+    boardState[3][0].setPiece(new Queen(3, 0, true));
+    boardState[3][7].setPiece(new Queen(3, 7, false));
+
+    // kings
+    boardState[4][0].setPiece(new Queen(4, 0, true));
+    boardState[4][7].setPiece(new Queen(4, 7, false));
   }
 }

@@ -1,11 +1,17 @@
 public class Knight extends Piece
 {
-  public Knight(int x, int y, boolean t) {
-
+  public Knight(int c, int r, boolean t) {
+    columnPos = r;
+    rowPos = c;
+    white = t;
   }
-  public void move();
 
-  public void captured();
-
+  public boolean isLegal(int newC, int newR) {
+    if (newC > 7 || newC < 0 || newR > 7 || newR < 0) return false;
+    else if (newC == columnPos && newR == rowPos) return false;
+    else if (Math.abs(columnPos-newC) == 1 && Math.abs(rowPos - newR) == 2) return true;
+    else if (Math.abs(columnPos-newC) == 2 && Math.abs(rowPos - newR) == 1) return true;
+    else return false;
+  }
 
 }
