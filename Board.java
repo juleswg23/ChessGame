@@ -15,6 +15,8 @@ public class Board extends JPanel
   public final int HEIGHT = 512;
   public final int CELL_SIZE = WIDTH/8;
 
+  private Square[][] boardState;
+
 
   public Board() {
     super();
@@ -39,7 +41,19 @@ public class Board extends JPanel
     }
   }
 
+  public void newEmptyBoard() {
+    for (int i = 0; i < ROWS; i++) {
+      for (int j = 0; j < COLUMNS; j++) {
+        boardState[i][j] = new Square(i, j);
+      }
+    }
+  }
+
   public void newGame() {
-    //add pieces to board
+
+    // set pawns
+    for (int j = 0; j < COLUMNS; j++) {
+      boardState[1][j].setPiece(new )
+    }
   }
 }
