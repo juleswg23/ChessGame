@@ -22,6 +22,7 @@ public class Board extends JPanel
   public final int CELL_SIZE = WIDTH/8;
 
   public boolean clicked = false;
+  public Piece clickedPiece = null;
 
   private ArrayList<Piece> pieces = new ArrayList<>();
 
@@ -111,12 +112,27 @@ public class Board extends JPanel
               Piece p = findPiece(c,r);
               if (!clicked && p != null) {
                 p.clicked = !p.clicked;
+                clickedPiece = p;
                 repaint();
                 clicked = !clicked;
-              } else if (p != null && p.clicked){
-                p.clicked = !p.clicked;
-                clicked = !clicked;
-                repaint();
+              } else if (clicked && p != null){
+                if (p.clicked) {
+                  p.clicked = !p.clicked;
+                  clickedPiece = null;
+                  clicked = !clicked;
+                  repaint();
+                } else if (clickedPiece.white != p.white){
+                  System.out.println("Capture");
+                }
+              } else if (clicked && p == null) {
+                if (clickedPiece.isLegal(c,r))  {
+                  clickedPiece.columnPos = c;
+                  clickedPiece.rowPos = r;
+                  clickedPiece.clicked = false;
+                  clicked = false;
+                  clickedPiece = null;
+                  repaint();
+                }
               }
           }
 
