@@ -40,6 +40,11 @@ public class Pawn extends Piece
 
   public ArrayList jumpedSquares (Point toMove) {
     ArrayList arr = new ArrayList<Point>();
+    if (position.y == 1 && toMove.y == 3) arr.add(new Point(position.x, 2));
+    if (position.y == 6 && toMove.y == 4) arr.add(new Point(position.x, 5));
+    //this last one only for pawns because they cannot capture if moving vertical.
+    if (position.y == toMove.y) arr.add(toMove);
+
     return arr;
   }
 

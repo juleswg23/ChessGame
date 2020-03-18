@@ -17,16 +17,16 @@ public class Rook extends Piece
 
   public ArrayList jumpedSquares(Point newPosition) {
     ArrayList<Point> arr = new ArrayList<Point>();
-    // check if the move is vertical
-    if (position.x == newPosition.x) {
-      //n is positive if we're moving up
+
+    if (position.x == newPosition.x) { // move is vertical
+      // n is positive if we're moving up
       int n = (newPosition.y-position.y)/Math.abs(position.y-newPosition.y);
       int i = position.y + n;
       while (i != newPosition.y) {
         arr.add(new Point(position.x, i));
         i += n;
       }
-    } else { //moving is horizontal
+    } else { // move is horizontal
       int n = (newPosition.x-position.x)/Math.abs(position.x-newPosition.x);
       int i = position.x + n;
       while (i != newPosition.x) {
