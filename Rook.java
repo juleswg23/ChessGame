@@ -10,7 +10,7 @@ public class Rook extends Piece
 
   public boolean isLegal(Point newPosition) {
     if (newPosition.x > 7 || newPosition.x < 0 || newPosition.y > 7 || newPosition.y < 0) return false;
-    else if (newPosition.x == position.x && newPosition.y == position.y) return false;
+    else if (newPosition.equals(position)) return false;
     else if (newPosition.x == position.x || newPosition.y == position.y) return true;
     else return false;
   }
@@ -36,5 +36,5 @@ public class Rook extends Piece
     }
     return arr;
   }
-  
+
 }
