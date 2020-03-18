@@ -121,8 +121,7 @@ public class Board extends JPanel
                   clicked = !clicked;
                   repaint();
                 } else if (clickedPiece.white != p.white){
-                  System.out.println("Capture");
-                  if (isLegal(clickedPiece, new Point(c,r)))  {
+                  if (isLegalCapture(clickedPiece, new Point(c,r)))  {
                     System.out.println("here");
                   }
                 }
@@ -164,6 +163,18 @@ public class Board extends JPanel
 
   public boolean isLegal(Piece piece, Point destPos) {
     if (!piece.isLegal(destPos)) return false;
+
+    ArrayList<Point> jumpedSquares = piece.jumpedSquares(destPos);
+    for (Point square : jumpedSquares) {
+      for (Piece p : pieces) {
+        if (p.position.equals(square)) return false;
+      }
+    }
+    return true;
+  }
+
+  public boolean isLegalCapture(Piece piece, Point destPos) {
+    if (!piece.captureMoveLegal(destPos)) return false;
 
     ArrayList<Point> jumpedSquares = piece.jumpedSquares(destPos);
     for (Point square : jumpedSquares) {

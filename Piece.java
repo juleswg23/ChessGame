@@ -18,7 +18,7 @@ abstract class Piece
     return white;
   }
 
-  public boolean captureMove(Point toMove) {
+  public boolean captureMoveLegal(Point toMove) {
     return isLegal(toMove);
   }
 
