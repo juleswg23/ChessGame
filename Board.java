@@ -21,6 +21,8 @@ public class Board extends JPanel
   public final int HEIGHT = 512;
   public final int CELL_SIZE = WIDTH/8;
 
+  public boolean clicked = false;
+
   private ArrayList<Piece> pieces = new ArrayList<>();
 
 
@@ -106,12 +108,15 @@ public class Board extends JPanel
           public void mousePressed(MouseEvent e) {
               int c = 7 - e.getX() / CELL_SIZE;
               int r = 7 - e.getY() / CELL_SIZE;
-              for (Piece p : pieces) {
-                if (p.columnPos == c && p.rowPos == r) {
-                  p.clicked = !p.clicked;
-                  repaint();
-                  break;
-                }
+              Piece p = findPiece(c,r);
+              if (!clicked && p != null) {
+                p.clicked = !p.clicked;
+                repaint();
+                clicked = !clicked;
+              } else if (p != null && p.clicked){
+                p.clicked = !p.clicked;
+                clicked = !clicked;
+                repaint();
               }
           }
 
@@ -131,6 +136,13 @@ public class Board extends JPanel
           }
     };
     this.addMouseListener(mouseListener);
-}
+  }
 
-}
+  public Piece findPiece(int c, int r) {
+    for (Piece p : pieces) {
+      if (p.columnPos == c && p.rowPos == r) return p;
+    }
+    return null;
+  }
+
+  }
