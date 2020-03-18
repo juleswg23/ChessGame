@@ -18,7 +18,8 @@ public class Bishop extends Piece
   }
 
   public String toString() {
-    return "B";
+    if (white) return "WB";
+    else return "BB";
   }
 
 }

@@ -37,7 +37,8 @@ public class Pawn extends Piece
   }
 
   public String toString() {
-    return "P";
+    if (white) return "WP";
+    else return "BP";
   }
 
 

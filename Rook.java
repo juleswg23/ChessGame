@@ -14,6 +14,7 @@ public class Rook extends Piece
   }
 
   public String toString() {
-    return "R";
+    if (white) return "WR";
+    else return "BR";
   }
 }

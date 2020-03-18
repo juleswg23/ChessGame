@@ -23,7 +23,8 @@ public class Queen extends Piece
   }
 
   public String toString() {
-    return "Q";
+    if (white) return "WQ";
+    else return "BQ";
   }
 
 
