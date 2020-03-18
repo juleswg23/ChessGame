@@ -36,6 +36,7 @@ public class Board extends JPanel
   public void paintComponent(Graphics g) {
       drawBoard(g);
   }
+
   public void drawBoard(Graphics g) {
     for (int row = 0; row < ROWS; row++) {
       for (int col = 0; col < COLUMNS; col++) {
@@ -158,4 +159,17 @@ public class Board extends JPanel
     return null;
   }
 
+  public boolean isLegal(Point origPos, Point destPos) {
+    piece = findPiece(origPos);
+    if (piece.isLegal(destPos)) return false;
+
+    ArrayList<Point> jumpedSquares = piece.jumpedSquares();
+    for (Point square : jumpedSquares) {
+      for (Piece p : pieces) {
+        if (p.position.equals(square)) return false;
+      }
+    }
+    return true;
   }
+  
+}
