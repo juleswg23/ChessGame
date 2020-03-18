@@ -46,12 +46,12 @@ public class Board extends JPanel
         } else {
           g.setColor(new Color(139,69,19));
         }
-        g.fillRect((col)*CELL_SIZE, (7 - row)*CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        g.fillRect((col)*CELL_SIZE, (row)*CELL_SIZE, CELL_SIZE, CELL_SIZE);
       }
     }
     for (Piece p : pieces) {
       String filePath = "Pictures/" + p.toString() + ".png";
-      int x = (7 - p.position.x) * CELL_SIZE;
+      int x = (p.position.x) * CELL_SIZE;
       int y = (7 - p.position.y) * CELL_SIZE;
       try {
         BufferedImage img = ImageIO.read(new File(filePath));
@@ -106,7 +106,7 @@ public class Board extends JPanel
         }
         @Override
           public void mousePressed(MouseEvent e) {
-              int c = 7 - e.getX() / CELL_SIZE;
+              int c = e.getX() / CELL_SIZE;
               int r = 7 - e.getY() / CELL_SIZE;
               Piece p = findPiece(new Point(c,r));
               if (!clicked && p != null) {
@@ -115,16 +115,19 @@ public class Board extends JPanel
                 repaint();
                 clicked = !clicked;
               } else if (clicked && p != null){
-                if (p.clicked) {
+                if (p.clicked) { //reset clicked piece
                   p.clicked = !p.clicked;
                   clickedPiece = null;
                   clicked = !clicked;
                   repaint();
                 } else if (clickedPiece.white != p.white){
                   System.out.println("Capture");
+                  if (isLegal(clickedPiece, new Point(c,r)))  {
+                    System.out.println("here");
+                  }
                 }
               } else if (clicked && p == null) {
-                if (clickedPiece.isLegal(new Point(c,r)))  {
+                if (isLegal(clickedPiece, new Point(c,r)))  {
                   clickedPiece.position.setLocation(new Point(c,r));
                   clickedPiece.clicked = false;
                   clicked = false;
@@ -159,8 +162,7 @@ public class Board extends JPanel
     return null;
   }
 
-  public boolean isLegal(Point origPos, Point destPos) {
-    Piece piece = findPiece(origPos);
+  public boolean isLegal(Piece piece, Point destPos) {
     if (!piece.isLegal(destPos)) return false;
 
     ArrayList<Point> jumpedSquares = piece.jumpedSquares(destPos);

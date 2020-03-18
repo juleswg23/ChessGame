@@ -23,29 +23,25 @@ public class Queen extends Piece
 
   public ArrayList<Point> jumpedSquares(Point newPosition) {
     ArrayList<Point> arr = new ArrayList<Point>();
-    int xStep;
-    int yStep;
+    int xStep = 0;
+    int yStep = 0;
 
     try {
       xStep = (newPosition.x-position.x)/Math.abs(position.x-newPosition.x);
-    } catch (Exception e) {
-      xStep = 0;
-    }
+    } catch (Exception e) {}
 
-    try{
+    try {
       yStep = (newPosition.y-position.y)/Math.abs(position.y-newPosition.y);
-    } catch (Exception e) {
-      yStep = 0;
-    }
+    } catch (Exception e) {}
+
     int i = position.x + xStep;
     int j = position.y + yStep;
 
-    while (i != newPosition.x && j != newPosition.y) {
-      arr.add(new Point(i, i));
+    while (i != newPosition.x || j != newPosition.y) {
+      arr.add(new Point(i, j));
       i += xStep;
       j += yStep;
     }
-
     return arr;
   }
 

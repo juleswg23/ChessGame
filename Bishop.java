@@ -25,8 +25,8 @@ public class Bishop extends Piece
     int i = position.x + xStep;
     int j = position.y + yStep;
 
-    while (i != newPosition.x && j != newPosition.y) {
-      arr.add(new Point(i, i));
+    while (i != newPosition.x || j != newPosition.y) {
+      arr.add(new Point(i, j));
       i += xStep;
       j += yStep;
     }
