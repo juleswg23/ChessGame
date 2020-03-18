@@ -1,8 +1,12 @@
+import java.awt.*;
+
 abstract class Piece
 {
+  public Point position;
   public int columnPos;
   public int rowPos;
   public boolean white;
+  public boolean clicked = false;
 
   public abstract boolean isLegal(int newC, int newR);
   public abstract String toString();
@@ -14,5 +18,4 @@ abstract class Piece
   public boolean getWhite() {
     return white;
   }
-
 }

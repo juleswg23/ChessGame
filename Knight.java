@@ -15,8 +15,14 @@ public class Knight extends Piece
   }
 
   public String toString() {
-    if (white) return "WN";
-    else return "BN";
+    if (!clicked) {
+      if (white) return "WN";
+      else return "BN";
+    } else {
+      if (white) return "WNH";
+      else return "BNH";
+    }
+
   }
 
 }

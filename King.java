@@ -15,8 +15,13 @@ public class King extends Piece
   }
 
   public String toString() {
-    if (white) return "WK";
-    else return "BK";
+    if (!clicked) {
+      if (white) return "WK";
+      else return "BK";
+    } else {
+      if (white) return "WKH";
+      else return "BKH";
+    }
   }
 
 }

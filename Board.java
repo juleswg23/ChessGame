@@ -9,6 +9,8 @@ import java.io.File;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.util.ArrayList;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class Board extends JPanel
 {
@@ -26,6 +28,7 @@ public class Board extends JPanel
     super();
     this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
     newGame();
+    createMouseListener();
   }
 
   @Override
@@ -92,5 +95,42 @@ public class Board extends JPanel
     pieces.add(new King(4, 0, true));
     pieces.add(new King(4, 7, false));
   }
+
+  public void createMouseListener() {
+    MouseListener mouseListener = new MouseListener() {
+        @Override
+        public void mouseClicked(MouseEvent mouseEvent) {
+
+        }
+        @Override
+          public void mousePressed(MouseEvent e) {
+              int c = 7 - e.getX() / CELL_SIZE;
+              int r = 7 - e.getY() / CELL_SIZE;
+              for (Piece p : pieces) {
+                if (p.columnPos == c && p.rowPos == r) {
+                  p.clicked = !p.clicked;
+                  repaint();
+                  break;
+                }
+              }
+          }
+
+          @Override
+          public void mouseReleased(MouseEvent mouseEvent) {
+
+          }
+
+          @Override
+          public void mouseEntered(MouseEvent mouseEvent) {
+
+          }
+
+          @Override
+          public void mouseExited(MouseEvent mouseEvent) {
+
+          }
+    };
+    this.addMouseListener(mouseListener);
+}
 
 }

@@ -23,8 +23,13 @@ public class Queen extends Piece
   }
 
   public String toString() {
-    if (white) return "WQ";
-    else return "BQ";
+    if (!clicked) {
+      if (white) return "WQ";
+      else return "BQ";
+    } else {
+      if (white) return "WQH";
+      else return "BQH";
+    }
   }
 
 
