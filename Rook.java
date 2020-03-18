@@ -15,7 +15,7 @@ public class Rook extends Piece
     else return false;
   }
 
-  public ArrayList jumpedSquares(Point newPosition) {
+  public ArrayList<Point> jumpedSquares(Point newPosition) {
     ArrayList<Point> arr = new ArrayList<Point>();
 
     if (position.x == newPosition.x) { // move is vertical

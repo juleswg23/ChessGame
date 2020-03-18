@@ -38,7 +38,7 @@ public class Pawn extends Piece
     return false;
   }
 
-  public ArrayList jumpedSquares (Point toMove) {
+  public ArrayList<Point> jumpedSquares (Point toMove) {
     ArrayList<Point> arr = new ArrayList<Point>();
     if (position.y == 1 && toMove.y == 3) arr.add(new Point(position.x, 2));
     if (position.y == 6 && toMove.y == 4) arr.add(new Point(position.x, 5));

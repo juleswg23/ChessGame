@@ -8,7 +8,7 @@ abstract class Piece
   public boolean clicked = false;
 
   public abstract boolean isLegal(Point toMove);
-  public abstract ArrayList jumpedSquares(Point toMove);
+  public abstract ArrayList<Point> jumpedSquares(Point toMove);
 
   public void setPos(Point p) {
     position.setLocation(p);

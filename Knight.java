@@ -15,7 +15,7 @@ public class Knight extends Piece
     else return false;
   }
 
-  public ArrayList jumpedSquares (Point toMove) {
+  public ArrayList<Point> jumpedSquares (Point toMove) {
     return new ArrayList<Point>();
   }
 

@@ -17,8 +17,20 @@ public class Bishop extends Piece
     return false;
   }
 
-  public ArrayList jumpedSquares (Point toMove) {
-    ArrayList arr = new ArrayList<Point>();
+  public ArrayList<Point> jumpedSquares (Point newPosition) {
+    ArrayList<Point> arr = new ArrayList<Point>();
+
+    int xStep = (newPosition.x-position.x)/Math.abs(position.x-newPosition.x);
+    int yStep = (newPosition.y-position.y)/Math.abs(position.y-newPosition.y);
+    int i = position.x + xStep;
+    int j = position.y + yStep;
+
+    while (i != newPosition.x && j != newPosition.y) {
+      arr.add(new Point(i, i));
+      i += xStep;
+      j += yStep;
+    }
+
     return arr;
   }
 

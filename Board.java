@@ -160,10 +160,10 @@ public class Board extends JPanel
   }
 
   public boolean isLegal(Point origPos, Point destPos) {
-    piece = findPiece(origPos);
-    if (piece.isLegal(destPos)) return false;
+    Piece piece = findPiece(origPos);
+    if (!piece.isLegal(destPos)) return false;
 
-    ArrayList<Point> jumpedSquares = piece.jumpedSquares();
+    ArrayList<Point> jumpedSquares = piece.jumpedSquares(destPos);
     for (Point square : jumpedSquares) {
       for (Piece p : pieces) {
         if (p.position.equals(square)) return false;
@@ -171,5 +171,5 @@ public class Board extends JPanel
     }
     return true;
   }
-  
+
 }
