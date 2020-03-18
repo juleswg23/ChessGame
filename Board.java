@@ -151,9 +151,9 @@ public class Board extends JPanel
     this.addMouseListener(mouseListener);
   }
 
-  public Piece findPiece(Point point) {
+  public Piece findPiece(Point toFind) {
     for (Piece p : pieces) {
-      if (p.position.equals(point)) return p;
+      if (p.position.equals(toFind)) return p;
     }
     return null;
   }

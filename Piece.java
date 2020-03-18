@@ -8,17 +8,26 @@ abstract class Piece
   public boolean clicked = false;
 
   public abstract boolean isLegal(Point toMove);
-  public abstract String toString();
   public abstract ArrayList jumpedSquares(Point toMove);
 
   public void setPos(Point p) {
     position.setLocation(p);
   }
+
   public boolean getWhite() {
     return white;
   }
+
   public boolean captureMove(Point toMove) {
     return isLegal(toMove);
+  }
+
+  public String toString() {
+    String str = "B";
+    if (white) str = "W";
+    str += this.getClass().getName().substring(0, 1);
+    if (clicked) str += "H";
+    return str;
   }
 
 }

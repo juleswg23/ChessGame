@@ -43,11 +43,4 @@ public class Pawn extends Piece
     return arr;
   }
 
-  public String toString() {
-    String str = "BP";
-    if (white) str = "WP";
-    if (clicked) str += "H";
-    return str;
-  }
-
 }

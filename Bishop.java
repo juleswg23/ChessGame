@@ -24,11 +24,4 @@ public class Bishop extends Piece
     return arr;
   }
 
-  public String toString() {
-    String str = "BB";
-    if (white) str = "WB";
-    if (clicked) str += "H";
-    return str;
-  }
-
 }

@@ -21,6 +21,7 @@ public class Knight extends Piece
     return arr;
   }
 
+  @Override
   public String toString() {
     String str = "BN";
     if (white) str = "WN";

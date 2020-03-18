@@ -29,11 +29,4 @@ public class Queen extends Piece
     return arr;
   }
 
-  public String toString() {
-    String str = "BQ";
-    if (white) str = "WQ";
-    if (clicked) str += "H";
-    return str;
-  }
-
 }

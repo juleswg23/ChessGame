@@ -21,11 +21,4 @@ public class King extends Piece
     return arr;
   }
 
-  public String toString() {
-    String str = "BK";
-    if (white) str = "WK";
-    if (clicked) str += "H";
-    return str;
-  }
-
 }

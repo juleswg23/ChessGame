@@ -36,11 +36,5 @@ public class Rook extends Piece
     }
     return arr;
   }
-
-  public String toString() {
-    String str = "BR";
-    if (white) str = "WR";
-    if (clicked) str += "H";
-    return str;
-  }
+  
 }
