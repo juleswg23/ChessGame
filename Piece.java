@@ -18,4 +18,7 @@ abstract class Piece
   public boolean getWhite() {
     return white;
   }
+  public boolean captureMove(int newC, int newR) {
+    return isLegal(newC, newR);
+  }
 }
