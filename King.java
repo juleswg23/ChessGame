@@ -1,27 +1,31 @@
+import java.awt.Point;
+import java.util.ArrayList;
+
 public class King extends Piece
 {
-  public King(int c, int r, boolean t) {
-    columnPos = c;
-    rowPos = r;
+  public King(Point p, boolean t) {
+    position = new Point(p);
     white = t;
   }
 
-  public boolean isLegal(int newC, int newR) {
-    if (newC > 7 || newC < 0 || newR > 7 || newR < 0) return false;
-    else if (newC == columnPos && newR == rowPos) return false;
-    else if (Math.abs(columnPos-newC) > 1) return false;
-    else if (Math.abs(rowPos-newR) > 1) return false;
+  public boolean isLegal(Point newPosition) {
+    if (newPosition.x > 7 || newPosition.x < 0 || newPosition.y > 7 || newPosition.y < 0) return false;
+    else if (newPosition.x == position.x && newPosition.y == position.y) return false;
+    else if (Math.abs(position.x-newPosition.x) > 1) return false;
+    else if (Math.abs(position.y-newPosition.y) > 1) return false;
     else return true;
   }
 
+  public ArrayList jumpedSquares (Point toMove) {
+    ArrayList arr = new ArrayList<Point>();
+    return arr;
+  }
+
   public String toString() {
-    if (!clicked) {
-      if (white) return "WK";
-      else return "BK";
-    } else {
-      if (white) return "WKH";
-      else return "BKH";
-    }
+    String str = "BK";
+    if (white) str = "WK";
+    if (clicked) str += "H";
+    return str;
   }
 
 }

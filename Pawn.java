@@ -1,50 +1,53 @@
+import java.awt.Point;
+import java.util.ArrayList;
+
 public class Pawn extends Piece
 {
-  public Pawn(int c, int r, boolean t) {
-    columnPos = c;
-    rowPos = r;
+  public Pawn(Point p, boolean t) {
+    position = new Point(p);
     white = t;
   }
 
-  public boolean isLegal(int newC, int newR) {
-    if (newC > 7 || newC < 0 || newR > 7 || newR < 0) return false;
-    if (newC == columnPos && newR == rowPos) return false;
+  public boolean isLegal(Point newPosition) {
+    if (newPosition.x > 7 || newPosition.x < 0 || newPosition.y > 7 || newPosition.y < 0) return false;
+    if (newPosition.equals(position)) return false;
     //White pawns
     if (white) {
-      if (newC == columnPos) {
-        if (rowPos == 1 && newR == 3) return true;
-        else if (rowPos - newR == -1) return true;
+      if (newPosition.x == position.x) {
+        if (position.y == 1 && newPosition.y == 3) return true;
+        else if (position.y - newPosition.y == -1) return true;
         else return false;
       }
-      else if (Math.abs(columnPos - newC) == 1) {
-        if (rowPos - newR == -1) return true;
+      else if (Math.abs(position.x - newPosition.x) == 1) {
+        if (position.y - newPosition.y == -1) return true;
         else return false;
       }
     }
     //Black pawns
     else {
-       if (newC == columnPos) {
-        if (rowPos == 6 && newR == 4) return true;
-        else if (rowPos - newR == 1) return true;
+       if (newPosition.x == position.x) {
+        if (position.y == 6 && newPosition.y == 4) return true;
+        else if (position.y - newPosition.y == 1) return true;
         else return false;
       }
-      else if (Math.abs(columnPos - newC) == 1) {
-        if (rowPos - newR == 1) return true;
+      else if (Math.abs(position.x - newPosition.x) == 1) {
+        if (position.y - newPosition.y == 1) return true;
         else return false;
       }
     }
     return false;
   }
 
-  public String toString() {
-    if (!clicked) {
-      if (white) return "WP";
-      else return "BP";
-    } else {
-      if (white) return "WPH";
-      else return "BPH";
-    }
+  public ArrayList jumpedSquares (Point toMove) {
+    ArrayList arr = new ArrayList<Point>();
+    return arr;
   }
 
+  public String toString() {
+    String str = "BP";
+    if (white) str = "WP";
+    if (clicked) str += "H";
+    return str;
+  }
 
 }

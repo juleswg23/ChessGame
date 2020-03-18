@@ -1,36 +1,39 @@
+import java.awt.Point;
+import java.util.ArrayList;
+
 public class Queen extends Piece
 {
-  public Queen(int c, int r, boolean t) {
-    columnPos = c;
-    rowPos = r;
+  public Queen(Point p, boolean t) {
+    position = new Point(p);
     white = t;
   }
 
-  public boolean isLegal(int newC, int newR) {
-    if (newC > 7 || newC < 0 || newR > 7 || newR < 0) return false;
-    else if (newC == columnPos && newR == rowPos) return false;
+  public boolean isLegal(Point newPosition) {
+    if (newPosition.x > 7 || newPosition.x < 0 || newPosition.y > 7 || newPosition.y < 0) return false;
+    else if (newPosition.x == position.x && newPosition.y == position.y) return false;
 
     boolean diagonal = false;
     boolean horizontal_vertical = false;
-//Check for diagonal move
-    if ((columnPos + rowPos) % 2 == (newC + newR) % 2) {
-      if (Math.abs(columnPos - newC) == Math.abs(rowPos - newR)) diagonal = true;
+    //Check for diagonal move
+    if ((position.x + position.y) % 2 == (newPosition.x + newPosition.y) % 2) {
+      if (Math.abs(position.x - newPosition.x) == Math.abs(position.y - newPosition.y)) diagonal = true;
     }
-//Check for horizontal/vertical move
-    if (newC == columnPos || newR == rowPos) horizontal_vertical = true;
+    //Check for horizontal/vertical move
+    if (newPosition.x == position.x || newPosition.y == position.y) horizontal_vertical = true;
 
     return diagonal || horizontal_vertical;
   }
 
-  public String toString() {
-    if (!clicked) {
-      if (white) return "WQ";
-      else return "BQ";
-    } else {
-      if (white) return "WQH";
-      else return "BQH";
-    }
+  public ArrayList jumpedSquares(Point toMove) {
+    ArrayList arr = new ArrayList<Point>();
+    return arr;
   }
 
+  public String toString() {
+    String str = "BQ";
+    if (white) str = "WQ";
+    if (clicked) str += "H";
+    return str;
+  }
 
 }

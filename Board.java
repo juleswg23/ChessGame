@@ -8,7 +8,6 @@ import javax.swing.*;
 import java.io.File;
 import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
-import java.util.ArrayList;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -25,7 +24,6 @@ public class Board extends JPanel
   public Piece clickedPiece = null;
 
   private ArrayList<Piece> pieces = new ArrayList<>();
-
 
   public Board() {
     super();
@@ -52,8 +50,8 @@ public class Board extends JPanel
     }
     for (Piece p : pieces) {
       String filePath = "Pictures/" + p.toString() + ".png";
-      int x = (7 - p.columnPos) * CELL_SIZE;
-      int y = (7 - p.rowPos) * CELL_SIZE;
+      int x = (7 - p.position.x) * CELL_SIZE;
+      int y = (7 - p.position.y) * CELL_SIZE;
       try {
         BufferedImage img = ImageIO.read(new File(filePath));
         Image newImage = img.getScaledInstance(CELL_SIZE, CELL_SIZE, Image.SCALE_SMOOTH);
@@ -68,35 +66,35 @@ public class Board extends JPanel
     // set pawns
     for (int col = 0; col < COLUMNS; col++) {
       // white pawns then black ones
-      pieces.add(new Pawn(col, 1, true));
-      pieces.add(new Pawn(col, 6, false));
+      pieces.add(new Pawn(new Point(col, 1), true));
+      pieces.add(new Pawn(new Point(col, 6), false));
     }
 
     // rooks
-    pieces.add(new Rook(0, 0, true));
-    pieces.add(new Rook(7, 0, true));
-    pieces.add(new Rook(0, 7, false));
-    pieces.add(new Rook(7, 7, false));
+    pieces.add(new Rook(new Point(0, 0), true));
+    pieces.add(new Rook(new Point(7, 0), true));
+    pieces.add(new Rook(new Point(0, 7), false));
+    pieces.add(new Rook(new Point(7, 7), false));
 
     // knights
-    pieces.add(new Knight(1, 0, true));
-    pieces.add(new Knight(6, 0, true));
-    pieces.add(new Knight(1, 7, false));
-    pieces.add(new Knight(6, 7, false));
+    pieces.add(new Knight(new Point(1, 0), true));
+    pieces.add(new Knight(new Point(6, 0), true));
+    pieces.add(new Knight(new Point(1, 7), false));
+    pieces.add(new Knight(new Point(6, 7), false));
 
     // bishops
-    pieces.add(new Bishop(2, 0, true));
-    pieces.add(new Bishop(5, 0, true));
-    pieces.add(new Bishop(2, 7, false));
-    pieces.add(new Bishop(5, 7, false));
+    pieces.add(new Bishop(new Point(2, 0), true));
+    pieces.add(new Bishop(new Point(5, 0), true));
+    pieces.add(new Bishop(new Point(2, 7), false));
+    pieces.add(new Bishop(new Point(5, 7), false));
 
     // queens
-    pieces.add(new Queen(3, 0, true));
-    pieces.add(new Queen(3, 7, false));
+    pieces.add(new Queen(new Point(3, 0), true));
+    pieces.add(new Queen(new Point(3, 7), false));
 
     // kings
-    pieces.add(new King(4, 0, true));
-    pieces.add(new King(4, 7, false));
+    pieces.add(new King(new Point(4, 0), true));
+    pieces.add(new King(new Point(4, 7), false));
   }
 
   public void createMouseListener() {
@@ -109,7 +107,7 @@ public class Board extends JPanel
           public void mousePressed(MouseEvent e) {
               int c = 7 - e.getX() / CELL_SIZE;
               int r = 7 - e.getY() / CELL_SIZE;
-              Piece p = findPiece(c,r);
+              Piece p = findPiece(new Point(c,r));
               if (!clicked && p != null) {
                 p.clicked = !p.clicked;
                 clickedPiece = p;
@@ -125,9 +123,8 @@ public class Board extends JPanel
                   System.out.println("Capture");
                 }
               } else if (clicked && p == null) {
-                if (clickedPiece.isLegal(c,r))  {
-                  clickedPiece.columnPos = c;
-                  clickedPiece.rowPos = r;
+                if (clickedPiece.isLegal(new Point(c,r)))  {
+                  clickedPiece.position.setLocation(new Point(c,r));
                   clickedPiece.clicked = false;
                   clicked = false;
                   clickedPiece = null;
@@ -154,9 +151,9 @@ public class Board extends JPanel
     this.addMouseListener(mouseListener);
   }
 
-  public Piece findPiece(int c, int r) {
+  public Piece findPiece(Point point) {
     for (Piece p : pieces) {
-      if (p.columnPos == c && p.rowPos == r) return p;
+      if (p.position.equals(point)) return p;
     }
     return null;
   }

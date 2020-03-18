@@ -1,30 +1,34 @@
+import java.awt.Point;
+import java.util.ArrayList;
+
 public class Bishop extends Piece
 {
-  public Bishop(int c, int r, boolean t) {
-    columnPos = c;
-    rowPos = r;
+  public Bishop(Point p, boolean t) {
+    position = new Point(p);
     white = t;
   }
 
-  public boolean isLegal(int newC, int newR) {
-    if (newC > 7 || newC < 0 || newR > 7 || newR < 0) {
+  public boolean isLegal(Point newPosition) {
+    if (newPosition.x > 7 || newPosition.x < 0 || newPosition.y > 7 || newPosition.y < 0) {
       return false;
-    } else if (newC == columnPos || newR == rowPos) {
+    } else if (newPosition.x == position.x || newPosition.y == position.y) {
       return false;
-    } else if ((columnPos + rowPos) % 2 == (newC + newR) % 2) {
-      if (Math.abs(columnPos - newC) == Math.abs(rowPos - newR)) return true;
+    } else if ((position.x + position.y) % 2 == (newPosition.x + newPosition.y) % 2) {
+      if (Math.abs(position.x - newPosition.x) == Math.abs(position.y - newPosition.y)) return true;
     }
     return false;
   }
 
+  public ArrayList jumpedSquares (Point toMove) {
+    ArrayList arr = new ArrayList<Point>();
+    return arr;
+  }
+
   public String toString() {
-    if (!clicked) {
-      if (white) return "WB";
-      else return "BB";
-    } else {
-      if (white) return "WBH";
-      else return "BBH";
-    }
+    String str = "BB";
+    if (white) str = "WB";
+    if (clicked) str += "H";
+    return str;
   }
 
 }
