@@ -11,7 +11,7 @@ public class MultiplayerClient
 
     try (
       Socket userSocket = new Socket(HOST_NAME, PORT_NUMBER);
-      PrintWriter out = new PrintWriter(userSocket.getOutputStream(), true);
+      PrintWriter clientOut = new PrintWriter(userSocket.getOutputStream(), true);
       BufferedReader in = new BufferedReader(
         new InputStreamReader(userSocket.getInputStream()));
     ) {
@@ -20,20 +20,19 @@ public class MultiplayerClient
       String fromServer;
       String fromUser;
 
+      //main event happns here
       while ((fromServer = in.readLine()) != null) {
-        System.out.println("Server: " + fromServer);
-
-        if (fromServer.startsWith("NEW")) {
-
-        } else if (fromServer.startsWith("MOVE")) {
-
-        } else if (fromServer.equals("QUIT"))
+        // interpret text and send to
+        if (fromServer.equals("QUIT")) {
           break;
+        }
+
+        System.out.println("Server replied with: " + fromServer);
 
         fromUser = stdIn.readLine();
         if (fromUser != null) {
           System.out.println("Client: " + fromUser);
-          out.println(fromUser);
+          clientOut.println(fromUser);
         }
       }
     } catch (UnknownHostException e) {

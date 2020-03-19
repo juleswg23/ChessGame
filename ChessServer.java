@@ -29,7 +29,10 @@ public class ChessServer{
 
       while(!done && scanner.hasNextLine()) {
         String line = scanner.nextLine();
+        // sends back to client
         serverPrintOut.println(csp.processInput(line));
+
+        System.out.println("Recived from client: " + line);
 
         if (line.equals("QUIT")) {
           done = true;
