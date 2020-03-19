@@ -35,6 +35,15 @@ public class MultiplayerClient
           clientOut.println(fromUser);
         }
       }
+
+      // close connection
+      try {
+        in.close();
+        clientOut.close();
+        userSocket.close(); 
+      } catch(IOException e) {
+        System.out.println(e);
+      }
     } catch (UnknownHostException e) {
         System.err.println("Don't know about host " + HOST_NAME);
         System.exit(1);
