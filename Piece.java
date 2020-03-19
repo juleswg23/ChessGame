@@ -6,8 +6,7 @@ abstract class Piece
 //maybe make private
   public Point position;
   private boolean white;
-//maybe make private
-  public boolean clicked = false;
+  private boolean clicked = false;
 
   public abstract boolean isLegal(Point toMove);
   public abstract ArrayList<Point> jumpedSquares(Point toMove);
@@ -26,6 +25,14 @@ abstract class Piece
 
   public boolean captureMoveLegal(Point toMove) {
     return isLegal(toMove);
+  }
+
+  public boolean getClicked() {
+    return clicked;
+  }
+
+  public void setClicked(boolean c) {
+    clicked = c;
   }
 
   public String toString() {
