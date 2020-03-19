@@ -107,46 +107,7 @@ public class Board extends JPanel
         }
         @Override
           public void mousePressed(MouseEvent e) {
-              int c = e.getX() / CELL_SIZE;
-              int r = 7 - e.getY() / CELL_SIZE;
-              Piece p = findPiece(new Point(c,r));
-              if (!clicked && p != null && p.white == whiteTurn) {
-                p.clicked = !p.clicked;
-                clickedPiece = p;
-                repaint();
-                clicked = !clicked;
-              } else if (clicked && p != null){
-                if (p.clicked) { //reset clicked piece
-                  p.clicked = !p.clicked;
-                  clickedPiece = null;
-                  clicked = !clicked;
-                  repaint();
-                } else if (clickedPiece.white != p.white && clickedPiece.white == whiteTurn){
-                  if (isLegalCapture(clickedPiece, new Point(c,r)))  {
-                    clickedPiece.position.setLocation(new Point(c,r));
-                    clickedPiece.clicked = false;
-                    //Find index of p in pieces and remove it
-                    int location = -1;
-                    for (int i = 0; i < pieces.size(); i++) {
-                      if (pieces.get(i) == p) location = i;
-                    }
-                    pieces.remove(location);
-                    clicked = false;
-                    clickedPiece = null;
-                    whiteTurn = !whiteTurn;
-                    repaint();
-                  }
-                }
-              } else if (clicked && p == null) {
-                if (isLegal(clickedPiece, new Point(c,r)))  {
-                  clickedPiece.position.setLocation(new Point(c,r));
-                  clickedPiece.clicked = false;
-                  clicked = false;
-                  clickedPiece = null;
-                  whiteTurn = !whiteTurn;
-                  repaint();
-                }
-              }
+            clickAction(e);
           }
 
           @Override
@@ -165,6 +126,47 @@ public class Board extends JPanel
           }
     };
     this.addMouseListener(mouseListener);
+  }
+
+  private void clickAction(MouseEvent e) {
+    int c = e.getX() / CELL_SIZE;
+    int r = 7 - e.getY() / CELL_SIZE;
+    Piece p = findPiece(new Point(c,r));
+    if (!clicked && p != null && p.white == whiteTurn) {
+      p.clicked = !p.clicked;
+      resetHelper(p);
+    } else if (clicked && p != null){
+      if (p.clicked) { //reset clicked piece
+        p.clicked = !p.clicked;
+        resetHelper(null);
+      } else if (clickedPiece.white != p.white && clickedPiece.white == whiteTurn){
+        if (isLegalCapture(clickedPiece, new Point(c,r)))  {
+          clickedPiece.position.setLocation(new Point(c,r));
+          clickedPiece.clicked = false;
+          //Find index of p in pieces and remove it
+          int location = -1;
+          for (int i = 0; i < pieces.size(); i++) {
+            if (pieces.get(i) == p) location = i;
+          }
+          pieces.remove(location);
+          whiteTurn = !whiteTurn;
+          resetHelper(null);
+        }
+      }
+    } else if (clicked && p == null) {
+      if (isLegal(clickedPiece, new Point(c,r)))  {
+        clickedPiece.position.setLocation(new Point(c,r));
+        clickedPiece.clicked = false;
+        resetHelper(null);
+        whiteTurn = !whiteTurn;
+      }
+    }
+  }
+
+  private void resetHelper(Piece p) {
+    clickedPiece = p;
+    clicked = !clicked;
+    repaint();
   }
 
   public Piece findPiece(Point toFind) {
