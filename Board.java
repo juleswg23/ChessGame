@@ -134,6 +134,15 @@ public class Board extends JPanel
     int r = 7 - e.getY() / CELL_SIZE;
     Piece p = findPiece(new Point(c,r));
 
+    makeMove(p, new Point(c,r));
+
+  }
+
+  // need to write this to call clicked
+  public void makeMove(Piece p, Point destPos) {
+    int c = destPos.x;
+    int r = destPos.y;
+
     if (!clicked && p != null && p.getWhite() == whiteTurn) {
       p.setClicked(!p.getClicked());
       resetHelper(p);
