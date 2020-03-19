@@ -1,17 +1,12 @@
 import java.io.*;
 import java.net.*;
 
-public class MultiplayerClient {
+public class MultiplayerClient
+{
 
   public static void main(String[] args) {
 
-    // if (args.length != 2) {
-    //   System.err.println(
-    //     "Usage: java EchoClient <host name> <port number>");
-    //   System.exit(1);
-    // }
-
-    final String HOST_NAME = "10.1.0.106";
+    String HOST_NAME = "127.0.0.1";
     final int PORT_NUMBER = 6789;
 
     try (
@@ -42,11 +37,11 @@ public class MultiplayerClient {
         }
       }
     } catch (UnknownHostException e) {
-        System.err.println("Don't know about host " + hostName);
+        System.err.println("Don't know about host " + HOST_NAME);
         System.exit(1);
     } catch (IOException e) {
         System.err.println("Couldn't get I/O for the connection to " +
-            hostName);
+            HOST_NAME);
         System.exit(1);
     }
   }

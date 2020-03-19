@@ -25,13 +25,13 @@ public class ChessServer{
       //Have the server take input from the client and echo it back
       //This should be placed in a loop that listens for a terminator text e.g. bye
       boolean done = false;
-      ChessServerProtocol csp = new ChessServerProtocol("one");
+      ChessServerProtocol csp = new ChessServerProtocol();
 
       while(!done && scanner.hasNextLine()) {
         String line = scanner.nextLine();
         serverPrintOut.println(csp.processInput(line));
 
-        if(line.toLowerCase().trim().equals("peace")) {
+        if (line.equals("QUIT")) {
           done = true;
         }
       }
