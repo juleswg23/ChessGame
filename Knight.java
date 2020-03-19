@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Knight extends Piece
 {
-  
+
   public Knight(Point p, boolean t) {
     position = new Point(p);
     setWhite(t);
@@ -24,7 +24,7 @@ public class Knight extends Piece
   public String toString() {
     String str = "BN";
     if (getWhite()) str = "WN";
-    if (clicked) str += "H";
+    if (getClicked()) str += "H";
     return str;
   }
 
