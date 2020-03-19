@@ -21,6 +21,7 @@ public class Board extends JPanel
   public final int CELL_SIZE = WIDTH/8;
 
   public boolean clicked = false;
+  public boolean whiteTurn = true;
   public Piece clickedPiece = null;
 
   private ArrayList<Piece> pieces = new ArrayList<>();
@@ -109,7 +110,7 @@ public class Board extends JPanel
               int c = e.getX() / CELL_SIZE;
               int r = 7 - e.getY() / CELL_SIZE;
               Piece p = findPiece(new Point(c,r));
-              if (!clicked && p != null) {
+              if (!clicked && p != null && p.white == whiteTurn) {
                 p.clicked = !p.clicked;
                 clickedPiece = p;
                 repaint();
@@ -120,9 +121,20 @@ public class Board extends JPanel
                   clickedPiece = null;
                   clicked = !clicked;
                   repaint();
-                } else if (clickedPiece.white != p.white){
+                } else if (clickedPiece.white != p.white && clickedPiece.white == whiteTurn){
                   if (isLegalCapture(clickedPiece, new Point(c,r)))  {
-                    System.out.println("here");
+                    clickedPiece.position.setLocation(new Point(c,r));
+                    clickedPiece.clicked = false;
+                    //Find index of p in pieces and remove it
+                    int location = -1;
+                    for (int i = 0; i < pieces.size(); i++) {
+                      if (pieces.get(i) == p) location = i;
+                    }
+                    pieces.remove(location);
+                    clicked = false;
+                    clickedPiece = null;
+                    whiteTurn = !whiteTurn;
+                    repaint();
                   }
                 }
               } else if (clicked && p == null) {
@@ -131,6 +143,7 @@ public class Board extends JPanel
                   clickedPiece.clicked = false;
                   clicked = false;
                   clickedPiece = null;
+                  whiteTurn = !whiteTurn;
                   repaint();
                 }
               }
