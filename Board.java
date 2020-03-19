@@ -163,14 +163,9 @@ public class Board extends JPanel
     } else if (clicked && p == null) {
       if (isLegal(clickedPiece, new Point(c,r)))  {
         clickedPiece.position.setLocation(new Point(c,r));
-<<<<<<< HEAD
         repaint();
         promotion(clickedPiece, new Point (c,r));
         clickedPiece.setClicked(false);
-=======
-        clickedPiece.setClicked(false);
-        promotion(clickedPiece, new Point (c,r));
->>>>>>> 9117078ac093e772051c0f85e3b572fa42ba2c0f
         resetHelper(null);
         whiteTurn = !whiteTurn;
       }
