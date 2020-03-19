@@ -24,8 +24,8 @@ public class Chess
     frame.setContentPane(b);
     frame.pack();
 
-    JMenuBar mb=new JMenuBar();
-    JMenu menu=new JMenu("Menu");
+    JMenuBar mb = new JMenuBar();
+    JMenu menu = new JMenu("Menu");
     JMenuItem newGameMenu = new JMenuItem("New Game");
     newGameMenu.setAccelerator(KeyStroke.getKeyStroke(
         KeyEvent.VK_N, ActionEvent.META_MASK));
