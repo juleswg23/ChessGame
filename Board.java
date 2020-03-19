@@ -166,6 +166,7 @@ public class Board extends JPanel
           clickedPiece.setClicked(true);
           repaint();
           promotion(clickedPiece, new Point (c,r));
+          clickedPiece.setClicked(false);
           resetHelper(null);
         }
       }
