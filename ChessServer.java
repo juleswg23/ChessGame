@@ -20,7 +20,7 @@ public class ChessServer{
       Scanner scanner = new Scanner(inputToServer, "UTF-8");
       PrintWriter serverPrintOut = new PrintWriter(new OutputStreamWriter(outputFromServer, "UTF-8"), true);
 
-      serverPrintOut.println("Hello World! Enter Peace to exit.");
+      serverPrintOut.println("You have connected to the multiplayer chess server.");
 
       //Have the server take input from the client and echo it back
       //This should be placed in a loop that listens for a terminator text e.g. bye
