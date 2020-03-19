@@ -3,22 +3,22 @@ import java.net.*;
 
 public class MultiplayerClient {
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
 
-    if (args.length != 2) {
-      System.err.println(
-        "Usage: java EchoClient <host name> <port number>");
-      System.exit(1);
-    }
+    // if (args.length != 2) {
+    //   System.err.println(
+    //     "Usage: java EchoClient <host name> <port number>");
+    //   System.exit(1);
+    // }
 
-    String hostName = args[0];
-    int portNumber = Integer.parseInt(args[1]);
+    final String HOST_NAME = "10.1.0.106";
+    final int PORT_NUMBER = 6789;
 
     try (
-      Socket kkSocket = new Socket(hostName, portNumber);
-      PrintWriter out = new PrintWriter(kkSocket.getOutputStream(), true);
+      Socket userSocket = new Socket(HOST_NAME, PORT_NUMBER);
+      PrintWriter out = new PrintWriter(userSocket.getOutputStream(), true);
       BufferedReader in = new BufferedReader(
-        new InputStreamReader(kkSocket.getInputStream()));
+        new InputStreamReader(userSocket.getInputStream()));
     ) {
       BufferedReader stdIn =
           new BufferedReader(new InputStreamReader(System.in));
@@ -27,7 +27,12 @@ public class MultiplayerClient {
 
       while ((fromServer = in.readLine()) != null) {
         System.out.println("Server: " + fromServer);
-        if (fromServer.equals("Bye."))
+
+        if (fromServer.startsWith("NEW")) {
+
+        } else if (fromServer.startsWith("MOVE")) {
+
+        } else if (fromServer.equals("QUIT"))
           break;
 
         fromUser = stdIn.readLine();

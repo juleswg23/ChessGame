@@ -135,7 +135,6 @@ public class Board extends JPanel
     Piece p = findPiece(new Point(c,r));
 
     makeMove(p, new Point(c,r));
-
   }
 
   // need to write this to call clicked
