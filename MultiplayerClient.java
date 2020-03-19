@@ -20,7 +20,7 @@ public class MultiplayerClient
       String fromServer;
       String fromUser;
 
-      //main event happns here
+      //main event happens here
       while ((fromServer = in.readLine()) != null) {
         // interpret text and send to
         if (fromServer.equals("QUIT")) {
