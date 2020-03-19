@@ -6,7 +6,7 @@ public class MultiplayerClient
 
   public static void main(String[] args) {
 
-    String HOST_NAME = "127.0.0.1";
+    String HOST_NAME = "localhost";
     final int PORT_NUMBER = 6789;
 
     try (

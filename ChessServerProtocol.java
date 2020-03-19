@@ -3,10 +3,10 @@ import java.io.*;
 
 public class ChessServerProtocol {
 
-  String player;
+  int player;
 
-  public ChessServerProtocol() {
-    player = "one?";
+  public ChessServerProtocol(int p) {
+    player = p;
   }
 
   public String processInput(String theInput) {

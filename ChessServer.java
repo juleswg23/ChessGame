@@ -24,29 +24,35 @@ public class ChessServer
       e.printStackTrace();
     }
 
+    System.out.println("Server is active and waiting for players");
+
     for (int i = 0; i < MAX_CONNECTIONS; i++) {
       ServerSocket finalServerSocket = serverSocket;
 
       //create thread
       Runnable runnable = () -> {
-        try {
+        int player = Integer.parseInt(Thread.currentThread().getName().substring(5, 6));
+
+        try (
           Socket listener = finalServerSocket.accept();
+        ) {
+          System.out.println("Player " + player + " has connected");
+
           InputStream toServer = listener.getInputStream();
           OutputStream fromServer = listener.getOutputStream();
 
           Scanner input = new Scanner(toServer, "UTF-8");
           PrintWriter serverPrintOut = new PrintWriter(new OutputStreamWriter(fromServer, "UTF-8"), true);
-          serverPrintOut.println("You have connected to the multiplayer chess server. You are player #" +
-                                  Thread.currentThread().getName().substring(5, 6));
+          serverPrintOut.println("You have connected to the multiplayer chess server. You are player #" + player);
 
           boolean done = false;
           // maybe pass it the thread name/number?
-          ChessServerProtocol csp = new ChessServerProtocol();
+          ChessServerProtocol csp = new ChessServerProtocol(player);
 
           while(!done && input.hasNextLine()) {
             String line = input.nextLine();
             // prints and sends back to client
-            System.out.println("Recived from client: " + line);
+            System.out.println("Recived from client " + player + ": " + line);
             serverPrintOut.println(csp.processInput(line));
 
             if (line.equals("QUIT")) {
