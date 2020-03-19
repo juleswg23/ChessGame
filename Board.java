@@ -23,6 +23,8 @@ public class Board extends JPanel
   public boolean clicked = false;
   public boolean whiteTurn = true;
   public Piece clickedPiece = null;
+  public King whiteKing = new King(new Point(4, 0), true);
+  public King blackKing = new King(new Point(4, 7), false);
 
   private ArrayList<Piece> pieces = new ArrayList<>();
 
@@ -94,8 +96,10 @@ public class Board extends JPanel
     pieces.add(new Queen(new Point(3, 7), false));
 
     // kings
-    pieces.add(new King(new Point(4, 0), true));
-    pieces.add(new King(new Point(4, 7), false));
+    whiteKing = new King(new Point(4, 0), true);
+    blackKing = new King(new Point(4, 7), false);
+    pieces.add(whiteKing);
+    pieces.add(blackKing);
   }
 
   public void createMouseListener() {
@@ -150,34 +154,33 @@ public class Board extends JPanel
       if (p.getClicked()) { //reset clicked piece
         p.setClicked(!p.getClicked());
         resetHelper(null);
-
       } else if (clickedPiece.getWhite() != p.getWhite() && clickedPiece.getWhite() == whiteTurn){
         if (isLegalCapture(clickedPiece, new Point(c,r)))  {
-          clickedPiece.position.setLocation(new Point(c,r));
-          clickedPiece.setClicked(false);
-          int location = -1; //Find index of p in pieces and remove it
+          if (!movePiece(new Point(c,r), p)) {
+            clickedPiece.setClicked(false);
 
-          for (int i = 0; i < pieces.size(); i++) {
-            if (pieces.get(i) == p) location = i;
+            for (int i = 0; i < pieces.size(); i++) {
+              if (pieces.get(i) == p) pieces.remove(i);
+            }
+
+            whiteTurn = !whiteTurn;
+            clickedPiece.setClicked(true);
+            repaint();
+            promotion(clickedPiece, new Point (c,r));
+            clickedPiece.setClicked(false);
+            resetHelper(null);
           }
-
-          pieces.remove(location);
-          whiteTurn = !whiteTurn;
-          clickedPiece.setClicked(true);
-          repaint();
-          promotion(clickedPiece, new Point (c,r));
-          clickedPiece.setClicked(false);
-          resetHelper(null);
         }
       }
     } else if (clicked && p == null) {
       if (isLegal(clickedPiece, new Point(c,r)))  {
-        clickedPiece.position.setLocation(new Point(c,r));
-        repaint();
-        promotion(clickedPiece, new Point (c,r));
-        clickedPiece.setClicked(false);
-        resetHelper(null);
-        whiteTurn = !whiteTurn;
+        if (!movePiece(new Point(c,r), null)) {
+          repaint();
+          promotion(clickedPiece, new Point (c,r));
+          clickedPiece.setClicked(false);
+          resetHelper(null);
+          whiteTurn = !whiteTurn;
+        }
       }
     }
   }
@@ -276,4 +279,29 @@ public class Board extends JPanel
     pieces.clear();
   }
 
+  private boolean check(Piece king) {
+    for (Piece p : pieces) {
+      if (p.getWhite() != king.getWhite() &&isLegalCapture(p, king.position)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean movePiece(Point destPos, Piece p) {
+    Point oldLocation = new Point(clickedPiece.position.x, clickedPiece.position.y);
+    clickedPiece.position.setLocation(destPos);
+    for (int i = 0; i < pieces.size(); i++) {
+      if (pieces.get(i) == p) pieces.remove(i);
+    }
+    System.out.println(check(blackKing));
+    if (whiteTurn && check(whiteKing)) {
+      clickedPiece.position.setLocation(oldLocation);
+      return true;
+    } else if (!whiteTurn && check(blackKing)){
+      clickedPiece.position.setLocation(oldLocation);
+      return true;
+    }
+    return false;
+  }
 }
