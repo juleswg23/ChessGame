@@ -14,11 +14,11 @@ import java.awt.event.MouseListener;
 public class Board extends JPanel
 {
 
-  public final int ROWS = 8;
-  public final int COLUMNS = 8;
-  public final int WIDTH = 512;
-  public final int HEIGHT = 512;
-  public final int CELL_SIZE = WIDTH/8;
+  public static final int ROWS = 8;
+  public static final int COLUMNS = 8;
+  public static final int WIDTH = 512;
+  public static final int HEIGHT = 512;
+  public static final int CELL_SIZE = WIDTH/8;
 
   public boolean clicked = false;
   public boolean whiteTurn = true;
@@ -63,11 +63,12 @@ public class Board extends JPanel
   }
 
   public void newGame() {
+    whiteTurn = true;
     // set pawns
     for (int col = 0; col < COLUMNS; col++) {
       // white pawns then black ones
-      pieces.add(new Pawn(new Point(col, 6), true));
-      //pieces.add(new Pawn(new Point(col, 6), false));
+      pieces.add(new Pawn(new Point(col, 1), true));
+      pieces.add(new Pawn(new Point(col, 6), false));
     }
 
     // rooks
@@ -260,6 +261,10 @@ public class Board extends JPanel
         pieces.add(piece);
       }
     }
+  }
+
+  public void clearArrayList() {
+    pieces.clear();
   }
 
 }
