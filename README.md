@@ -4,3 +4,4 @@
 * en passant
 * Check
 * checkmate
+* public to private, write getters and setters

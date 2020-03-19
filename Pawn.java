@@ -3,15 +3,17 @@ import java.util.ArrayList;
 
 public class Pawn extends Piece
 {
+  
   public Pawn(Point p, boolean t) {
     position = new Point(p);
-    white = t;
+    setWhite(t);
   }
+
   @Override
   public boolean captureMoveLegal(Point newPosition) {
     if (newPosition.x > 7 || newPosition.x < 0 || newPosition.y > 7 || newPosition.y < 0) return false;
     if (newPosition.equals(position)) return false;
-    if (white) {
+    if (getWhite()) {
       if (Math.abs(position.x - newPosition.x) == 1) {
         if (position.y - newPosition.y == -1) return true;
         else return false;
@@ -29,7 +31,7 @@ public class Pawn extends Piece
     if (newPosition.x > 7 || newPosition.x < 0 || newPosition.y > 7 || newPosition.y < 0) return false;
     if (newPosition.equals(position)) return false;
     //White pawns
-    if (white) {
+    if (getWhite()) {
       if (newPosition.x == position.x) {
         if (position.y == 1 && newPosition.y == 3) return true;
         else if (position.y - newPosition.y == -1) return true;

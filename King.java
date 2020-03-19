@@ -3,9 +3,10 @@ import java.util.ArrayList;
 
 public class King extends Piece
 {
+  
   public King(Point p, boolean t) {
     position = new Point(p);
-    white = t;
+    setWhite(t);
   }
 
   public boolean isLegal(Point newPosition) {

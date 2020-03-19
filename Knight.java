@@ -3,9 +3,10 @@ import java.util.ArrayList;
 
 public class Knight extends Piece
 {
+  
   public Knight(Point p, boolean t) {
     position = new Point(p);
-    white = t;
+    setWhite(t);
   }
 
   public boolean isLegal(Point newPosition) {
@@ -22,7 +23,7 @@ public class Knight extends Piece
   @Override
   public String toString() {
     String str = "BN";
-    if (white) str = "WN";
+    if (getWhite()) str = "WN";
     if (clicked) str += "H";
     return str;
   }

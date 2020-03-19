@@ -132,14 +132,14 @@ public class Board extends JPanel
     int c = e.getX() / CELL_SIZE;
     int r = 7 - e.getY() / CELL_SIZE;
     Piece p = findPiece(new Point(c,r));
-    if (!clicked && p != null && p.white == whiteTurn) {
+    if (!clicked && p != null && p.getWhite() == whiteTurn) {
       p.clicked = !p.clicked;
       resetHelper(p);
     } else if (clicked && p != null){
       if (p.clicked) { //reset clicked piece
         p.clicked = !p.clicked;
         resetHelper(null);
-      } else if (clickedPiece.white != p.white && clickedPiece.white == whiteTurn){
+      } else if (clickedPiece.getWhite() != p.getWhite() && clickedPiece.getWhite() == whiteTurn){
         if (isLegalCapture(clickedPiece, new Point(c,r)))  {
           clickedPiece.position.setLocation(new Point(c,r));
           clickedPiece.clicked = false;

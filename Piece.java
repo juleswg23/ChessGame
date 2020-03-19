@@ -3,8 +3,10 @@ import java.util.ArrayList;
 
 abstract class Piece
 {
+//maybe make private
   public Point position;
-  public boolean white;
+  private boolean white;
+//maybe make private
   public boolean clicked = false;
 
   public abstract boolean isLegal(Point toMove);
@@ -16,6 +18,10 @@ abstract class Piece
 
   public boolean getWhite() {
     return white;
+  }
+
+  public void setWhite(boolean w) {
+    white = w;
   }
 
   public boolean captureMoveLegal(Point toMove) {
