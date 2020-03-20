@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.Scanner;
 
 public class MultiplayerClient
 {
@@ -11,31 +12,27 @@ public class MultiplayerClient
 
     try (
       Socket userSocket = new Socket(HOST_NAME, PORT_NUMBER);
-      PrintWriter clientOut = new PrintWriter(userSocket.getOutputStream(), true);
-      BufferedReader in = new BufferedReader(
-        new InputStreamReader(userSocket.getInputStream()));
+      // PrintWriter clientOut = new PrintWriter(userSocket.getOutputStream(), true);
+      // BufferedReader in = new BufferedReader(
+      //   new InputStreamReader(userSocket.getInputStream()));
     ) {
-      BufferedReader stdIn =
-          new BufferedReader(new InputStreamReader(System.in));
-      String fromServer;
-      String fromUser;
+
+      InputStream toClient = userSocket.getInputStream();
+      OutputStream fromClient = userSocket.getOutputStream();
+
+      Scanner input = new Scanner(toClient, "UTF-8");
+      PrintWriter clientPrintOut = new PrintWriter(new OutputStreamWriter(fromClient, "UTF-8"), true);
+
+      //System.out.println(userSocket.getLocalAddress().toString());
+      clientPrintOut.println(userSocket.getLocalAddress().toString());
 
       //main event happens here
-      while ((fromServer = in.readLine()) != null) {
+      while (input.hasNextLine()) {
         // interpret text and send to
-        if (fromServer.equals("QUIT")) {
-          System.out.println("Server replied with: " + fromServer);
-          break;
-        }
-
-        System.out.println("Server replied with: " + fromServer);
-
-        fromUser = stdIn.readLine();
-        if (fromUser != null) {
-          System.out.println("Client: " + fromUser);
-          clientOut.println(fromUser);
-        }
+        System.out.println(input.nextLine());
       }
+
+      userSocket.close();
 
     } catch (UnknownHostException e) {
         System.err.println("Don't know about host " + HOST_NAME);

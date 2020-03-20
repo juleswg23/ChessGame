@@ -28,21 +28,19 @@ public class ChessServerNEW
       }
     });
 
-  Thread t2 = new Thread(new Runnable()
-  {
-    @Override
-    public void run()
+    Thread t2 = new Thread(new Runnable()
     {
-      try {
-        connection.createConnection(2);
-      } catch(InterruptedException e) {
-        e.printStackTrace();
+      @Override
+      public void run()
+      {
+        try {
+          connection.createConnection(2);
+        } catch(InterruptedException e) {
+          e.printStackTrace();
+        }
       }
-    }
-  });
+    });
 
-    //Thread t1 = new Thread(() -> connection.createConnection(1));
-    //Thread t2 = new Thread(() -> connection.createConnection(2));
     t1.start();
     t2.start();
     t1.join();
@@ -52,6 +50,9 @@ public class ChessServerNEW
   public static class Connection
   {
     ServerSocket serverSocket = null;
+    public static String messageInTransit = "";
+    public static String lastSentMessage = "";
+    public static int sendingPlayer;
 
     public Connection() {
       try {
@@ -61,9 +62,8 @@ public class ChessServerNEW
       }
     }
 
-    public void createConnection(int i) throws InterruptedException{
+    public void createConnection(int i) throws InterruptedException {
       synchronized(this){
-
         ServerSocket finalServerSocket = serverSocket;
 
         int USERS_PORT = 17643;
@@ -79,31 +79,30 @@ public class ChessServerNEW
           OutputStream fromServer = listenerSocket.getOutputStream();
 
           Scanner input = new Scanner(toServer, "UTF-8");
-          PrintWriter serverPrintOut = new PrintWriter(new OutputStreamWriter(fromServer, "UTF-8"), true);
-          serverPrintOut.println("You have connected to the multiplayer chess server. You are player #" + player);
+          PrintWriter serverSendOut = new PrintWriter(new OutputStreamWriter(fromServer, "UTF-8"), true);
+
+          serverSendOut.println("You have connected to the multiplayer chess server. You are player #" + player);
 
           boolean done = false;
-          // maybe pass it the thread name/number?
-          notify();
-          wait();
+          String ip;
 
-          // TODO
-          // receive IP and send to other thread.
-          // send other threads IP to this.
-
-
-          while(!done && input.hasNextLine()) {
-            String line = input.nextLine();
-            // prints and sends back to client
-            System.out.println("Recived from client " + player + ": " + line);
-            serverPrintOut.println("Back to client");
-
-            if (line.equals("QUIT")) {
-              done = true;
-              serverPrintOut.println("Closing Connection.");
+          while (messageInTransit != lastSentMessage || input.hasNextLine()) {
+            //sendingPlayer = player;
+            if (messageInTransit != lastSentMessage) {
+                // prints and sends to other client
+                System.out.println(messageInTransit);
+                serverSendOut.println("to player " + player + ": " + messageInTransit);
+                lastSentMessage = messageInTransit;
+                notify();
+            } else if (input.hasNextLine()) {
+                sendingPlayer = player;
+                messageInTransit = "Recived from client " + sendingPlayer + ": " + input.nextLine();
+                notify();
+                wait();
+            } else {
+                notify();
             }
           }
-          notify();
         }
         catch (IOException e) {
           e.printStackTrace();
