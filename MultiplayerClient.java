@@ -1,11 +1,14 @@
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
+import javax.swing.*;
+
 
 public class MultiplayerClient
 {
 
   public static void main(String[] args) {
+    //String playerName = args[0];
 
     String HOST_NAME = "localhost";
     final int PORT_NUMBER = 6789;
@@ -23,18 +26,29 @@ public class MultiplayerClient
       //temp
       Scanner userType = new Scanner(System.in);
 
-      String messageToReceive = "";
       String messageToSend = "";
+      String messageToReceive = input.nextLine();
+      System.out.println(messageToReceive);
 
-      while (input.hasNextLine()) {
-          messageToReceive = input.nextLine();
-          System.out.println(messageToReceive);
-        if (userType.hasNextLine()) {
-          messageToSend = userType.nextLine();
-          clientSendOut.println(messageToSend);
-        }
+      int player = Integer.parseInt(messageToReceive.substring(messageToReceive.length() - 1));
+      String options[] = {"a", "B", "c", "d"};
+      int promoterWindow = -2;
+
+      if (player == 1) {
+        promoterWindow = JOptionPane.showOptionDialog(null, "Box for player: " + player,
+                        "", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options);
+        clientSendOut.println(promoterWindow);
       }
 
+      while (input.hasNextLine()) {
+        messageToReceive = input.nextLine();
+        System.out.println(messageToReceive);
+
+        promoterWindow = JOptionPane.showOptionDialog(null, "Box for player: " + player,
+                        "", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options);
+        clientSendOut.println(promoterWindow);
+      }
+      
       userSocket.close();
 
     } catch (UnknownHostException e) {
