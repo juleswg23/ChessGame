@@ -2,7 +2,7 @@ import java.net.*;
 import java.io.*;
 import java.util.Scanner;
 
-public class ChessServerNEW
+public class ChessServer
 {
 
   //public static final int MAX_CONNECTIONS = 2;
@@ -90,17 +90,17 @@ public class ChessServerNEW
 
           while (messageInTransit != lastSentMessage || input.hasNextLine()) {
             if (messageInTransit != lastSentMessage) {
-                // prints and sends to other client
-                System.out.println("To " + player + ", " + "From " + sendingPlayer + ": " + messageInTransit);
-                serverSendOut.println("To " + player + ", " + "From " + sendingPlayer + ": " + messageInTransit);
-                lastSentMessage = messageInTransit;
-                notify();
+              // prints and sends to other client
+              System.out.println("To " + player + ", " + "From " + sendingPlayer + ": " + messageInTransit);
+              serverSendOut.println("To " + player + ", " + "From " + sendingPlayer + ": " + messageInTransit);
+              lastSentMessage = messageInTransit;
+              notify();
             } else if (input.hasNextLine()) {
-                // read message and pass on to other thread.
-                sendingPlayer = player;
-                messageInTransit = input.nextLine();
-                notify();
-                wait();
+              // read message and pass on to other thread.
+              sendingPlayer = player;
+              messageInTransit = input.nextLine();
+              notify();
+              wait();
             }
           }
         }
