@@ -20,19 +20,23 @@ public class MultiplayerClient
       InputStream toClient = userSocket.getInputStream();
       OutputStream fromClient = userSocket.getOutputStream();
 
-      ObjectInputStream is = new ObjectInputStream(userSocket.getInputStream());
-      ObjectOutputStream os = new ObjectOutputStream(userSocket.getOutputStream());
-
       Scanner input = new Scanner(toClient, "UTF-8");
       PrintWriter clientSendOut = new PrintWriter(new OutputStreamWriter(fromClient, "UTF-8"), true);
+
+      ObjectInputStream is = new ObjectInputStream(toClient);
+      ObjectOutputStream os = new ObjectOutputStream(fromClient);
 
       //temp
       Scanner userType = new Scanner(System.in);
 
-      Object objectToSend = "";
-      Object objectToReceive = is.readObject();
+      String messageToSend = "";
+      String messageToReceive = input.nextLine();
       System.out.println(messageToReceive);
 
+      Object objectToSend = "";
+      Object objectToReceive = null;
+
+      //int player = 2; //this was a test
       int player = Integer.parseInt(messageToReceive.substring(messageToReceive.length() - 1));
 
       if (player == 1) {
@@ -40,17 +44,24 @@ public class MultiplayerClient
         // replace this with the game the gets passed back and forth
         // instead of the user typing.
         while (userType.hasNextLine()) {
+          clientSendOut.println(userType.nextLine());
           os.writeObject(new Board());
           break;
         }
       }
 
-      while (true) {
-        objectToReceive = is.readObject();
-        System.out.println(objectToReceive);
+      while (input.hasNextLine()) {
+        messageToReceive = input.nextLine();
+        System.out.println(messageToReceive);
+        try {
+          objectToReceive = is.readObject();
+          System.out.println(objectToReceive);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }
 
         while (userType.hasNextLine()) {
-          os.writeObject(new Board());
+          clientSendOut.println(userType.nextLine());
           break;
         }
       }

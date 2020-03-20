@@ -52,6 +52,8 @@ public class ChessServer
     ServerSocket serverSocket = null;
     public static Object objectInTransit = null;
     public static Object lastSentObject = null;
+    public static String messageInTransit = "";
+    public static String lastSentMessage = "";
     public static int sendingPlayer;
 
     public Connection() {
@@ -75,45 +77,46 @@ public class ChessServer
         ) {
           System.out.println("Player " + player + " has connected");
 
-          // InputStream toServer = listenerSocket.getInputStream();
-          // OutputStream fromServer = listenerSocket.getOutputStream();
-          //
-          // Scanner input = new Scanner(toServer, "UTF-8");
-          // PrintWriter serverSendOut = new PrintWriter(new OutputStreamWriter(fromServer, "UTF-8"), true);
+          InputStream toServer = listenerSocket.getInputStream();
+          OutputStream fromServer = listenerSocket.getOutputStream();
 
-          try {
-            ObjectInputStream is = new ObjectInputStream(listenerSocket.getInputStream());
-            ObjectOutputStream os = new ObjectOutputStream(listenerSocket.getOutputStream());
+          Scanner input = new Scanner(toServer, "UTF-8");
+          PrintWriter serverSendOut = new PrintWriter(new OutputStreamWriter(fromServer, "UTF-8"), true);
 
+          ObjectInputStream is = new ObjectInputStream(toServer);
+          ObjectOutputStream os = new ObjectOutputStream(fromServer);
 
-
-          //serverSendOut.println("You have connected to the multiplayer chess server. You are player #" + player);
-
+          serverSendOut.println("You have connected to the multiplayer chess server. You are player #" + player);
           boolean done = false;
 
           notify();
           wait();
 
-          while (!objectInTransit.equals(lastSentObject) || true) {
-            if (!objectInTransit.equals(lastSentObject)) {
+          while (messageInTransit != lastSentMessage || input.hasNextLine()) {
+            if (messageInTransit != lastSentMessage) {
               // prints and sends to other client
-              System.out.println("To " + player + ", " + "From " + sendingPlayer + ": " + objectInTransit);
+              System.out.println("To " + player + ", " + "From " + sendingPlayer + ": " + messageInTransit);
+              System.out.println("TEST: " + objectInTransit);
               os.writeObject(objectInTransit); //this changed
-              lastSentObject = objectInTransit;
+              //lastSentObject = objectInTransit;
+              lastSentMessage = messageInTransit;
               notify();
             } else {
               try {
                 // read message and pass on to other thread.
                 sendingPlayer = player;
+                messageInTransit = input.nextLine();
                 objectInTransit = is.readObject();
                 notify();
                 wait();
-              } catch (Exception e) {}
+              } catch (Exception e) {
+                e.printStackTrace();
+              }
             }
           }
-        } catch (EOFException e) {
-          e.printStackTrace();
-        }
+        // } catch (EOFException e) {
+        //   e.printStackTrace();
+        // }
       }
         catch (IOException e) {
           e.printStackTrace();
