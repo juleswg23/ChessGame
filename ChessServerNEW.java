@@ -84,7 +84,9 @@ public class ChessServerNEW
           serverSendOut.println("You have connected to the multiplayer chess server. You are player #" + player);
 
           boolean done = false;
-          String ip;
+
+          notify();
+          wait();
 
           while (messageInTransit != lastSentMessage || input.hasNextLine()) {
             if (messageInTransit != lastSentMessage) {

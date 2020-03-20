@@ -18,10 +18,7 @@ public class MultiplayerClient
       OutputStream fromClient = userSocket.getOutputStream();
 
       Scanner input = new Scanner(toClient, "UTF-8");
-      PrintWriter clientPrintOut = new PrintWriter(new OutputStreamWriter(fromClient, "UTF-8"), true);
-
-      clientPrintOut.println(userSocket.getLocalAddress().toString());
-      //clientPrintOut.println("QUIT");
+      PrintWriter clientSendOut = new PrintWriter(new OutputStreamWriter(fromClient, "UTF-8"), true);
 
       //temp
       Scanner userType = new Scanner(System.in);
@@ -29,37 +26,15 @@ public class MultiplayerClient
       String messageToReceive = "";
       String messageToSend = "";
 
-
-      while (true) {
-        messageToReceive = waitForInput(input);
-        System.out.println(messageToReceive);
-        if (messageToReceive.contains("QUIT")) {
-          break;
+      while (input.hasNextLine()) {
+          messageToReceive = input.nextLine();
+          System.out.println(messageToReceive);
+        if (userType.hasNextLine()) {
+          messageToSend = userType.nextLine();
+          clientSendOut.println(messageToSend);
         }
-
-        messageToSend = waitForInput(userType);
-        clientPrintOut.println(messageToSend);
       }
 
-      // receiving and sending happens here
-      // while (input.hasNextLine()) {
-      //
-      //   messageToReceive = input.nextLine();
-      //
-      //   if (messageToReceive != null) {
-      //     System.out.println(messageToReceive);
-      //     if (messageToReceive.contains("QUIT")) {
-      //       break;
-      //     }
-      //   }
-      //
-      //   messageToSend = userType.nextLine();
-      //
-      //   if (messageToSend != null) {
-      //     clientPrintOut.println(messageToSend);
-      //   }
-      //
-      // }
       userSocket.close();
 
     } catch (UnknownHostException e) {
@@ -70,14 +45,5 @@ public class MultiplayerClient
             HOST_NAME);
         System.exit(1);
     }
-  }
-
-  public static String waitForInput(Scanner sc) {
-    String message = "";
-    while (sc.hasNextLine()) {
-      message = sc.nextLine();
-      break;
-    }
-    return message;
   }
 }
