@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Bishop extends Piece
 {
-  
+
   public Bishop(Point p, boolean t) {
     position = new Point(p);
     setWhite(t);
@@ -18,7 +18,7 @@ public class Bishop extends Piece
     return false;
   }
 
-  public ArrayList<Point> jumpedSquares (Point newPosition) {
+  public boolean jumpedSquares(Point newPosition, ArrayList<Piece> pieces) {
     ArrayList<Point> arr = new ArrayList<Point>();
 
     int xStep = (newPosition.x-position.x)/Math.abs(position.x-newPosition.x);
@@ -32,7 +32,12 @@ public class Bishop extends Piece
       j += yStep;
     }
 
-    return arr;
+    for (Point square : arr) {
+      for (Piece p : pieces) {
+        if (p.position.equals(square)) return false;
+      }
+    }
+    return true;
   }
 
 }

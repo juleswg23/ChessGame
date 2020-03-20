@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class King extends Piece
 {
-  
+
   public King(Point p, boolean t) {
     position = new Point(p);
     setWhite(t);
@@ -17,8 +17,8 @@ public class King extends Piece
     else return true;
   }
 
-  public ArrayList<Point> jumpedSquares (Point toMove) {
-    return new ArrayList<Point>();
+  public boolean jumpedSquares(Point toMove, ArrayList<Piece> pieces) {
+    return true;
   }
 
 }

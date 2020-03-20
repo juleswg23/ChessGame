@@ -16,8 +16,24 @@ public class Knight extends Piece
     else return false;
   }
 
-  public ArrayList<Point> jumpedSquares (Point toMove) {
-    return new ArrayList<Point>();
+  // public boolean checkMate(ArrayList<Piece> pieces) {
+  //   Point originalPosition = this.position;
+  //   for (int i = -2; i < 3; i++) {
+  //     if (i != 0) {
+  //       Point newLocationOne = new Point(position.x + i, position.y + (3-Math.abs(i)));
+  //       Point newLocationTwo = new Point(position.x + i, position.y + (3-Math.abs(i)));
+  //
+  //
+  //
+  //     }
+  //   }
+  //
+  //   return true;
+  // }
+
+
+  public boolean jumpedSquares(Point toMove, ArrayList<Piece> pieces) {
+    return true;
   }
 
   @Override
