@@ -31,24 +31,27 @@ public class MultiplayerClient
       System.out.println(messageToReceive);
 
       int player = Integer.parseInt(messageToReceive.substring(messageToReceive.length() - 1));
-      String options[] = {"a", "B", "c", "d"};
-      int promoterWindow = -2;
 
       if (player == 1) {
-        promoterWindow = JOptionPane.showOptionDialog(null, "Box for player: " + player,
-                        "", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options);
-        clientSendOut.println(promoterWindow);
+        // TODO last thing
+        // replace this with the game the gets passed back and forth
+        // instead of the user typing.
+        while (userType.hasNextLine()) {
+          clientSendOut.println(userType.nextLine());
+          break;
+        }
       }
 
       while (input.hasNextLine()) {
         messageToReceive = input.nextLine();
         System.out.println(messageToReceive);
 
-        promoterWindow = JOptionPane.showOptionDialog(null, "Box for player: " + player,
-                        "", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options);
-        clientSendOut.println(promoterWindow);
+        while (userType.hasNextLine()) {
+          clientSendOut.println(userType.nextLine());
+          break;
+        }
       }
-      
+
       userSocket.close();
 
     } catch (UnknownHostException e) {
