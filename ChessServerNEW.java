@@ -87,20 +87,18 @@ public class ChessServerNEW
           String ip;
 
           while (messageInTransit != lastSentMessage || input.hasNextLine()) {
-            //sendingPlayer = player;
             if (messageInTransit != lastSentMessage) {
                 // prints and sends to other client
-                System.out.println(messageInTransit);
-                serverSendOut.println("to player " + player + ": " + messageInTransit);
+                System.out.println("To " + player + ", " + "From " + sendingPlayer + ": " + messageInTransit);
+                serverSendOut.println("To " + player + ", " + "From " + sendingPlayer + ": " + messageInTransit);
                 lastSentMessage = messageInTransit;
                 notify();
             } else if (input.hasNextLine()) {
+                // read message and pass on to other thread.
                 sendingPlayer = player;
-                messageInTransit = "Recived from client " + sendingPlayer + ": " + input.nextLine();
+                messageInTransit = input.nextLine();
                 notify();
                 wait();
-            } else {
-                notify();
             }
           }
         }

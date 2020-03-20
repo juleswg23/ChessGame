@@ -12,9 +12,6 @@ public class MultiplayerClient
 
     try (
       Socket userSocket = new Socket(HOST_NAME, PORT_NUMBER);
-      // PrintWriter clientOut = new PrintWriter(userSocket.getOutputStream(), true);
-      // BufferedReader in = new BufferedReader(
-      //   new InputStreamReader(userSocket.getInputStream()));
     ) {
 
       InputStream toClient = userSocket.getInputStream();
@@ -23,15 +20,46 @@ public class MultiplayerClient
       Scanner input = new Scanner(toClient, "UTF-8");
       PrintWriter clientPrintOut = new PrintWriter(new OutputStreamWriter(fromClient, "UTF-8"), true);
 
-      //System.out.println(userSocket.getLocalAddress().toString());
       clientPrintOut.println(userSocket.getLocalAddress().toString());
+      //clientPrintOut.println("QUIT");
 
-      //main event happens here
-      while (input.hasNextLine()) {
-        // interpret text and send to
-        System.out.println(input.nextLine());
+      //temp
+      Scanner userType = new Scanner(System.in);
+
+      String messageToReceive = "";
+      String messageToSend = "";
+
+
+      while (true) {
+        messageToReceive = waitForInput(input);
+        System.out.println(messageToReceive);
+        if (messageToReceive.contains("QUIT")) {
+          break;
+        }
+
+        messageToSend = waitForInput(userType);
+        clientPrintOut.println(messageToSend);
       }
 
+      // receiving and sending happens here
+      // while (input.hasNextLine()) {
+      //
+      //   messageToReceive = input.nextLine();
+      //
+      //   if (messageToReceive != null) {
+      //     System.out.println(messageToReceive);
+      //     if (messageToReceive.contains("QUIT")) {
+      //       break;
+      //     }
+      //   }
+      //
+      //   messageToSend = userType.nextLine();
+      //
+      //   if (messageToSend != null) {
+      //     clientPrintOut.println(messageToSend);
+      //   }
+      //
+      // }
       userSocket.close();
 
     } catch (UnknownHostException e) {
@@ -44,4 +72,12 @@ public class MultiplayerClient
     }
   }
 
+  public static String waitForInput(Scanner sc) {
+    String message = "";
+    while (sc.hasNextLine()) {
+      message = sc.nextLine();
+      break;
+    }
+    return message;
+  }
 }
