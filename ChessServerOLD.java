@@ -63,7 +63,7 @@ public class ChessServerOLD
     }
 
     public void createConnection(int i) throws InterruptedException {
-      synchronized(this){
+      //synchronized(this){
         ServerSocket finalServerSocket = serverSocket;
 
         int USERS_PORT = 17643;
@@ -85,29 +85,30 @@ public class ChessServerOLD
 
           boolean done = false;
 
-          notify();
-          wait();
+          // notify();
+          // wait();
 
           while (messageInTransit != lastSentMessage || input.hasNextLine()) {
             if (messageInTransit != lastSentMessage) {
+              lastSentMessage = messageInTransit;
               // prints and sends to other client
               System.out.println("To " + player + ", " + "From " + sendingPlayer + ": " + messageInTransit);
               serverSendOut.println("To " + player + ", " + "From " + sendingPlayer + ": " + messageInTransit);
-              lastSentMessage = messageInTransit;
-              notify();
+              //notify();
             } else if (input.hasNextLine()) {
               // read message and pass on to other thread.
               sendingPlayer = player;
               messageInTransit = input.nextLine();
-              notify();
-              wait();
+              Thread.sleep(2000);
+              // notify();
+              // wait();
             }
           }
         }
         catch (IOException e) {
           e.printStackTrace();
         }
-      }
+
     }
   }
 

@@ -32,15 +32,15 @@ public class MultiplayerClientOLD
 
       int player = Integer.parseInt(messageToReceive.substring(messageToReceive.length() - 1));
 
-      if (player == 1) {
-        // TODO last thing
-        // replace this with the game the gets passed back and forth
-        // instead of the user typing.
-        while (userType.hasNextLine()) {
-          clientSendOut.println(userType.nextLine());
-          break;
-        }
-      }
+      // if (player == 1) {
+      //   // TODO last thing
+      //   // replace this with the game the gets passed back and forth
+      //   // instead of the user typing.
+      //   while (userType.hasNextLine()) {
+      //     clientSendOut.println(userType.nextLine());
+      //     break;
+      //   }
+      // }
 
       while (input.hasNextLine()) {
         messageToReceive = input.nextLine();
