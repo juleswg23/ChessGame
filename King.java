@@ -17,8 +17,8 @@ public class King extends Piece
     else return true;
   }
 
-  public boolean jumpedSquares(Point toMove, ArrayList<Piece> pieces) {
-    return true;
+  public ArrayList<Point> jumpedSquares(Point toMove) {
+    return new ArrayList<Point>();
   }
 
 }

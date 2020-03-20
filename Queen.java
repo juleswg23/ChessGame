@@ -22,7 +22,7 @@ public class Queen extends Piece
     return false;
   }
 
-  public boolean jumpedSquares (Point newPosition, ArrayList<Piece> pieces) {
+  public ArrayList<Point> jumpedSquares (Point newPosition) {
     ArrayList<Point> arr = new ArrayList<Point>();
     int xStep = 0;
     int yStep = 0;
@@ -43,12 +43,8 @@ public class Queen extends Piece
       i += xStep;
       j += yStep;
     }
-    for (Point square : arr) {
-      for (Piece p : pieces) {
-        if (p.position.equals(square)) return false;
-      }
-    }
-    return true;
+
+    return arr;
   }
 
 }

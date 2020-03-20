@@ -2,14 +2,14 @@ import java.awt.event.*;
 import javax.swing.JFrame;
 
 public class NewGameAction implements ActionListener {
-  private Board b;
+  private Board board;
   public NewGameAction(Board b) {
-    this.b = b;
+    board = b;
   }
   @Override
   public void actionPerformed(ActionEvent e) {
-    b.clearArrayList();
-    b.newGame();
-    b.repaint();
+    board.clearArrayList();
+    board.newGame();
+    board.repaint();
   }
 }

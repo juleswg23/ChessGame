@@ -50,19 +50,14 @@ public class Pawn extends Piece
     return false;
   }
 
-  public boolean jumpedSquares (Point toMove, ArrayList<Piece> pieces) {
+  public ArrayList<Point> jumpedSquares (Point toMove) {
     ArrayList<Point> arr = new ArrayList<Point>();
     if (position.y == 1 && toMove.y == 3) arr.add(new Point(position.x, 2));
     if (position.y == 6 && toMove.y == 4) arr.add(new Point(position.x, 5));
     //this last one only for pawns because they cannot capture if moving vertical.
     if (position.x == toMove.x) arr.add(toMove);
 
-    for (Point square : arr) {
-      for (Piece p : pieces) {
-        if (this.position.equals(square)) return false;
-      }
-    }
-    return true;
+    return arr;
   }
 
   @Override

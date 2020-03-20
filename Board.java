@@ -2,6 +2,8 @@
  * Board class has a visual represenation of the board.
  * @author Stefan W-G and co.
  */
+
+ //TO DO Promotion when capture, checkmate, bishops and rooks capture move legal, castle en pessant
 import java.util.*;
 import java.awt.*;
 import javax.swing.*;
@@ -40,6 +42,10 @@ public class Board extends JPanel
   @Override
   public void paintComponent(Graphics g) {
       drawBoard(g);
+  }
+
+  public void clearArrayList() {
+    pieces.clear();
   }
 
   public void drawBoard(Graphics g) {
@@ -150,176 +156,40 @@ public class Board extends JPanel
       originalPos = null;
       repaint();
     } else if (originalPos != null) {
-      if (clickedPiece.movePiece(pieces, originalPos, new Point(c,r))) {
-        originalPos = null;
-        clickedPiece.setClicked(false);
-        repaint();
-        whiteTurn = !whiteTurn;
+      Point oldLocation = new Point(clickedPiece.position.x, clickedPiece.position.y);
+      int result = clickedPiece.movePiece(pieces, originalPos, new Point(c,r));
+      King king = whiteKing;
+      if (!whiteTurn) king = blackKing;
+      if (result == -1) {
+        System.out.println(check(king));
+        if (!check(king)) {
+          originalPos = null;
+          clickedPiece.setClicked(false);
+          repaint();
+          whiteTurn = !whiteTurn;
+        } else {
+          clickedPiece.position.setLocation(oldLocation);
+        }
+      } else if (result >= 0) {
+        System.out.println(check(whiteKing));
+        if (!check(king)) {
+          clickedPiece.position.setLocation(new Point(c,r));
+          pieces.remove(result);
+          originalPos = null;
+          clickedPiece.setClicked(false);
+          repaint();
+          whiteTurn = !whiteTurn;
+        }
       }
     }
   }
 
-  // need to write this to call clicked
-  // public void makeMove(Piece p, Point destPos) {
-  //   int c = destPos.x;
-  //   int r = destPos.y;
-  //
-  //   if (!clicked && p != null && p.getWhite() == whiteTurn) {
-  //     p.setClicked(!p.getClicked());
-  //     resetHelper(p);
-  //
-  //   } else if (clicked && p != null){
-  //     if (p.getClicked()) { //reset clicked piece
-  //       p.setClicked(!p.getClicked());
-  //       resetHelper(null);
-  //     } else if (clickedPiece.getWhite() != p.getWhite() && clickedPiece.getWhite() == whiteTurn){
-  //       if (isLegalCapture(clickedPiece, new Point(c,r)))  {
-  //         if (!movePiece(new Point(c,r), p)) {
-  //           clickedPiece.setClicked(false);
-  //
-  //           for (int i = 0; i < pieces.size(); i++) {
-  //             if (pieces.get(i) == p) pieces.remove(i);
-  //           }
-  //
-  //           whiteTurn = !whiteTurn;
-  //           clickedPiece.setClicked(true);
-  //           repaint();
-  //           promotion(clickedPiece, new Point (c,r));
-  //           clickedPiece.setClicked(false);
-  //           resetHelper(null);
-  //         }
-  //       }
-  //     }
-  //   } else if (clicked && p == null) {
-  //     if (isLegal(clickedPiece, new Point(c,r)))  {
-  //       if (!movePiece(new Point(c,r), null)) {
-  //         repaint();
-  //         promotion(clickedPiece, new Point (c,r));
-  //         clickedPiece.setClicked(false);
-  //         resetHelper(null);
-  //         whiteTurn = !whiteTurn;
-  //       }
-  //     }
-  //   }
-  // }
-
-  private void resetHelper(Piece p) {
-    clickedPiece = p;
-    clicked = !clicked;
-    repaint();
-  }
-
-  public Piece findPiece(Point toFind) {
+  private boolean check(Piece king) {
     for (Piece p : pieces) {
-      if (p.position.equals(toFind)) return p;
-    }
-    return null;
-  }
-
-  // public boolean isLegal(Piece piece, Point destPos) {
-  //   if (!piece.isLegal(destPos)) return false;
-  //
-  //   ArrayList<Point> jumpedSquares = piece.jumpedSquares(destPos);
-  //   for (Point square : jumpedSquares) {
-  //     for (Piece p : pieces) {
-  //       if (p.position.equals(square)) return false;
-  //     }
-  //   }
-  //   return true;
-  // }
-
-  // public boolean isLegalCapture(Piece piece, Point destPos) {
-  //   if (!piece.captureMoveLegal(destPos)) return false;
-  //
-  //   ArrayList<Point> jumpedSquares = piece.jumpedSquares(destPos);
-  //   for (Point square : jumpedSquares) {
-  //     for (Piece p : pieces) {
-  //       if (p.position.equals(square)) return false;
-  //     }
-  //   }
-  //   return true;
-  // }
-
-  private void promotion(Piece p, Point destPos) {
-    Piece piece = null;
-    if (p.getClass().getName().equals("Pawn")) {
-      if (p.position.y == 7 || p.position.y == 0) {
-
-        String[] filePaths = new String[4];
-        String[] type = {"B", "N", "R", "Q"};
-        String c = "W";
-        if (p.position.y == 0) c = "B";
-
-        for (int i = 0; i < filePaths.length; i++) {
-          filePaths[i] = "Pictures/" + c + type[i] + ".png";
-        }
-
-        ImageIcon[] imageOptions = new ImageIcon[4];
-        for (int i = 0; i < filePaths.length; i++) {
-          try {
-            imageOptions[i] = new ImageIcon(filePaths[i]);
-          } catch (Exception e) {}
-        }
-
-        boolean color = p.getWhite();
-        int promoterWindow = JOptionPane.showOptionDialog(null, "Pick a piece for promotion",
-                        "", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, imageOptions, imageOptions);
-        switch(promoterWindow) {
-          case 0:
-            piece = new Bishop(destPos, color);
-            break;
-          case 1:
-            piece = new Knight(destPos, color);
-            break;
-          case 2:
-            piece = new Rook(destPos, color);
-            break;
-          case 3:
-            piece = new Queen(destPos, color);
-            break;
-          default:
-            piece = new Queen(destPos, color);
-            break;
-        }
-
-        int location = -1; //Find index of p in pieces and remove it
-
-        for (int i = 0; i < pieces.size(); i++) {
-          if (pieces.get(i) == p) location = i;
-        }
-        pieces.remove(location);
-        pieces.add(piece);
+      if (p.getWhite() != king.getWhite() && p.captureMoveLegal(king.position)) {
+        return true;
       }
     }
+    return false;
   }
-
-  public void clearArrayList() {
-    pieces.clear();
-  }
-
-  // private boolean check(Piece king) {
-  //   for (Piece p : pieces) {
-  //     if (p.getWhite() != king.getWhite() &&isLegalCapture(p, king.position)) {
-  //       return true;
-  //     }
-  //   }
-  //   return false;
-  // }
-
-  // private boolean movePiece(Point destPos, Piece p) {
-  //   Point oldLocation = new Point(clickedPiece.position.x, clickedPiece.position.y);
-  //   clickedPiece.position.setLocation(destPos);
-  //   for (int i = 0; i < pieces.size(); i++) {
-  //     if (pieces.get(i) == p) pieces.remove(i);
-  //   }
-  //   System.out.println(check(blackKing));
-  //   if (whiteTurn && check(whiteKing)) {
-  //     clickedPiece.position.setLocation(oldLocation);
-  //     return true;
-  //   } else if (!whiteTurn && check(blackKing)){
-  //     clickedPiece.position.setLocation(oldLocation);
-  //     return true;
-  //   }
-  //   return false;
-  // }
 }

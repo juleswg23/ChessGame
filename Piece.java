@@ -10,7 +10,7 @@ abstract class Piece
   private boolean clicked = false;
 
   public abstract boolean isLegal(Point toMove);
-  public abstract boolean jumpedSquares(Point toMove, ArrayList<Piece> pieces);
+  public abstract ArrayList<Point> jumpedSquares(Point toMove);
   //public abstract boolean checkMate();
 
   public void setPos(Point p) {
@@ -49,8 +49,8 @@ abstract class Piece
     return str;
   }
 
-  public boolean movePiece(ArrayList<Piece> pieces, Point originalPos, Point destPos) {
-    if (originalPos == destPos) return false;
+  public int movePiece(ArrayList<Piece> pieces, Point originalPos, Point destPos) {
+    if (originalPos == destPos) return -1;
     boolean isLegal = true;
     int toCapture = -1;
     for (int i = 0; i < pieces.size(); i++) {
@@ -58,18 +58,30 @@ abstract class Piece
     }
     if (toCapture == -1) {
       if (this.isLegal(destPos)) {
-        if (jumpedSquares(destPos, pieces)) this.position.setLocation(destPos);
-        promotion(destPos, pieces);
-        return true;
+        ArrayList<Point> a = null;
+        a = jumpedSquares(destPos);
+        if (jumpedSquaresHelper(a, pieces)) {
+          this.position.setLocation(destPos);
+          promotion(destPos, pieces);
+          return -1;
+        }
       }
     } else {
       if (this.captureMoveLegal(destPos) && getWhite() != pieces.get(toCapture).getWhite()) {
         this.position.setLocation(destPos);
-        pieces.remove(toCapture);
-        return true;
+        // pieces.remove(toCapture);
+        return toCapture;
       }
     }
-    return false;
+    return -2;
   }
 
+  public boolean jumpedSquaresHelper(ArrayList<Point> arr, ArrayList<Piece> pieces) {
+    for (Point square : arr) {
+      for (Piece p : pieces) {
+        if (p.position.equals(square)) return false;
+      }
+    }
+    return true;
+  }
 }

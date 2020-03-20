@@ -16,7 +16,7 @@ public class Rook extends Piece
     else return false;
   }
 
-  public boolean jumpedSquares (Point newPosition, ArrayList<Piece> pieces) {
+  public ArrayList<Point> jumpedSquares (Point newPosition) {
     ArrayList<Point> arr = new ArrayList<Point>();
     int xStep = 0;
     int yStep = 0;
@@ -37,12 +37,8 @@ public class Rook extends Piece
       i += xStep;
       j += yStep;
     }
-    for (Point square : arr) {
-      for (Piece p : pieces) {
-        if (p.position.equals(square)) return false;
-      }
-    }
-    return true;
+
+    return arr;
   }
 
 }
