@@ -10,8 +10,9 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.Serializable;
 
-public class Board extends JPanel
+public class Board extends JPanel implements Serializable
 {
 
   public static final int ROWS = 8;

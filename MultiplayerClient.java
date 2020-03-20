@@ -20,14 +20,17 @@ public class MultiplayerClient
       InputStream toClient = userSocket.getInputStream();
       OutputStream fromClient = userSocket.getOutputStream();
 
+      ObjectInputStream is = new ObjectInputStream(userSocket.getInputStream());
+      ObjectOutputStream os = new ObjectOutputStream(userSocket.getOutputStream());
+
       Scanner input = new Scanner(toClient, "UTF-8");
       PrintWriter clientSendOut = new PrintWriter(new OutputStreamWriter(fromClient, "UTF-8"), true);
 
       //temp
       Scanner userType = new Scanner(System.in);
 
-      String messageToSend = "";
-      String messageToReceive = input.nextLine();
+      Object objectToSend = "";
+      Object objectToReceive = is.readObject();
       System.out.println(messageToReceive);
 
       int player = Integer.parseInt(messageToReceive.substring(messageToReceive.length() - 1));
@@ -37,17 +40,17 @@ public class MultiplayerClient
         // replace this with the game the gets passed back and forth
         // instead of the user typing.
         while (userType.hasNextLine()) {
-          clientSendOut.println(userType.nextLine());
+          os.writeObject(new Board());
           break;
         }
       }
 
-      while (input.hasNextLine()) {
-        messageToReceive = input.nextLine();
-        System.out.println(messageToReceive);
+      while (true) {
+        objectToReceive = is.readObject();
+        System.out.println(objectToReceive);
 
         while (userType.hasNextLine()) {
-          clientSendOut.println(userType.nextLine());
+          os.writeObject(new Board());
           break;
         }
       }
