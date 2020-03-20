@@ -1,7 +1,9 @@
 import java.awt.Point;
 import java.util.ArrayList;
+import java.io.Serializable;
 
-abstract class Piece
+
+abstract class Piece implements Serializable
 {
 //maybe make private
   public Point position;
@@ -40,7 +42,18 @@ abstract class Piece
     if (white) str = "W";
     str += this.getClass().getName().substring(0, 1);
     if (clicked) str += "H";
+
+    // new but not needed
+    str += position.x;
+    str += position.y;
+
     return str;
+  }
+
+  public boolean equals(Piece p) {
+    return getWhite() == p.getWhite() &&
+           getClicked() == p.getClicked() &&
+           position.x == p.position.x && position.y == p.position.y;
   }
 
 }

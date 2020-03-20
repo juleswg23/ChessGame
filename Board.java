@@ -305,4 +305,49 @@ public class Board extends JPanel implements Serializable
     }
     return false;
   }
+
+  //GETTERS
+  public boolean getClicked() {
+    return clicked;
+  }
+
+  public boolean getWhiteTurn (){
+    return whiteTurn;
+  }
+
+  public Piece getClickedPiece() {
+    return clickedPiece;
+  }
+
+  public King getWhiteKing() {
+    return whiteKing;
+  }
+  public King getBlackKing() {
+    return blackKing;
+  }
+
+  public ArrayList<Piece> getPieces() {
+    return pieces;
+  }
+
+  public String toString() {
+    return pieces.toString();
+  }
+
+  public boolean equals(Board b) {
+    boolean same = this.toString().equals(b.toString()) &&
+            this.getClicked() == b.getClicked() &&
+            this.getWhiteKing().equals(b.getWhiteKing()) &&
+            this.getBlackKing().equals(b.getBlackKing()) &&
+            this.getWhiteTurn() == b.getWhiteTurn();
+
+    if (this.getClickedPiece() != null && b.getClickedPiece() != null) {
+      same = same && this.getClickedPiece().equals(b.getClickedPiece());
+    } else {
+      same = same && this.getClickedPiece() == null && b.getClickedPiece() == null;
+    }
+    return same;
+  }
+
+
 }

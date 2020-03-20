@@ -17,14 +17,14 @@ public class MultiplayerClient
       Socket userSocket = new Socket(HOST_NAME, PORT_NUMBER);
     ) {
 
-      InputStream toClient = userSocket.getInputStream();
       OutputStream fromClient = userSocket.getOutputStream();
+      InputStream toClient = userSocket.getInputStream();
 
-      Scanner input = new Scanner(toClient, "UTF-8");
       PrintWriter clientSendOut = new PrintWriter(new OutputStreamWriter(fromClient, "UTF-8"), true);
+      Scanner input = new Scanner(toClient, "UTF-8");
 
-      ObjectInputStream is = new ObjectInputStream(toClient);
       ObjectOutputStream os = new ObjectOutputStream(fromClient);
+      ObjectInputStream is = new ObjectInputStream(toClient);
 
       //temp
       Scanner userType = new Scanner(System.in);
@@ -45,7 +45,9 @@ public class MultiplayerClient
         // instead of the user typing.
         while (userType.hasNextLine()) {
           clientSendOut.println(userType.nextLine());
-          os.writeObject(new Board());
+          Board b = new Board();
+          os.writeObject(b);
+          os.flush();
           break;
         }
       }

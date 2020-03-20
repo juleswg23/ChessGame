@@ -77,14 +77,14 @@ public class ChessServer
         ) {
           System.out.println("Player " + player + " has connected");
 
-          InputStream toServer = listenerSocket.getInputStream();
           OutputStream fromServer = listenerSocket.getOutputStream();
+          InputStream toServer = listenerSocket.getInputStream();
 
-          Scanner input = new Scanner(toServer, "UTF-8");
           PrintWriter serverSendOut = new PrintWriter(new OutputStreamWriter(fromServer, "UTF-8"), true);
+          Scanner input = new Scanner(toServer, "UTF-8");
 
-          ObjectInputStream is = new ObjectInputStream(toServer);
           ObjectOutputStream os = new ObjectOutputStream(fromServer);
+          ObjectInputStream is = new ObjectInputStream(toServer);
 
           serverSendOut.println("You have connected to the multiplayer chess server. You are player #" + player);
           boolean done = false;
@@ -98,6 +98,7 @@ public class ChessServer
               System.out.println("To " + player + ", " + "From " + sendingPlayer + ": " + messageInTransit);
               System.out.println("TEST: " + objectInTransit);
               os.writeObject(objectInTransit); //this changed
+              os.flush();
               // lastSentObject = objectInTransit;
               lastSentMessage = messageInTransit;
               notify();

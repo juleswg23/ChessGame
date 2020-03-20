@@ -25,6 +25,9 @@ public class Knight extends Piece
     String str = "BN";
     if (getWhite()) str = "WN";
     if (getClicked()) str = str + "H";
+// this is new but not needed
+    str += position.x;
+    str += position.y;
     return str;
   }
 
