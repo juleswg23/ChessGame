@@ -24,6 +24,7 @@ public class MultiplayerClient
       while ((fromServer = in.readLine()) != null) {
         // interpret text and send to
         if (fromServer.equals("QUIT")) {
+          System.out.println("Server replied with: " + fromServer);
           break;
         }
 
@@ -36,14 +37,6 @@ public class MultiplayerClient
         }
       }
 
-      // close connection
-      try {
-        in.close();
-        clientOut.close();
-        userSocket.close(); 
-      } catch(IOException e) {
-        System.out.println(e);
-      }
     } catch (UnknownHostException e) {
         System.err.println("Don't know about host " + HOST_NAME);
         System.exit(1);

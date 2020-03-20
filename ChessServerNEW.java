@@ -7,14 +7,42 @@ public class ChessServerNEW
 
   //public static final int MAX_CONNECTIONS = 2;
   public static final int PORT_NUMBER = 6789;
+  public int playerOne;
+  public int playerTwo;
 
   public static void main(String[] args) throws InterruptedException {
-
     // make the new socket and threads
     final Connection connection = new Connection();
     //final ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
-    Thread t1 = new Thread(() -> connection.createConnection(1));
-    Thread t2 = new Thread(() -> connection.createConnection(2));
+
+    Thread t1 = new Thread(new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        try {
+          connection.createConnection(1);
+        } catch(InterruptedException e) {
+          e.printStackTrace();
+        }
+      }
+    });
+
+  Thread t2 = new Thread(new Runnable()
+  {
+    @Override
+    public void run()
+    {
+      try {
+        connection.createConnection(2);
+      } catch(InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
+  });
+
+    //Thread t1 = new Thread(() -> connection.createConnection(1));
+    //Thread t2 = new Thread(() -> connection.createConnection(2));
     t1.start();
     t2.start();
     t1.join();
@@ -33,47 +61,53 @@ public class ChessServerNEW
       }
     }
 
-    public void createConnection(int i) {
-      ServerSocket finalServerSocket = serverSocket;
+    public void createConnection(int i) throws InterruptedException{
+      synchronized(this){
 
-      int USERS_PORT = 17643;
-      System.out.println("Server is active and waiting for players");
-      int player = (int) Thread.currentThread().getId();
+        ServerSocket finalServerSocket = serverSocket;
 
-      try (
-        Socket listenerSocket = finalServerSocket.accept();
-      ) {
-        System.out.println("Player " + player + " has connected");
+        int USERS_PORT = 17643;
+        System.out.println("Server is active and waiting for players");
+        int player = i;
 
-        InputStream toServer = listenerSocket.getInputStream();
-        OutputStream fromServer = listenerSocket.getOutputStream();
+        try (
+          Socket listenerSocket = finalServerSocket.accept();
+        ) {
+          System.out.println("Player " + player + " has connected");
 
-        Scanner input = new Scanner(toServer, "UTF-8");
-        PrintWriter serverPrintOut = new PrintWriter(new OutputStreamWriter(fromServer, "UTF-8"), true);
-        serverPrintOut.println("You have connected to the multiplayer chess server. You are player #" + player);
+          InputStream toServer = listenerSocket.getInputStream();
+          OutputStream fromServer = listenerSocket.getOutputStream();
 
-        boolean done = false;
-        // maybe pass it the thread name/number?
+          Scanner input = new Scanner(toServer, "UTF-8");
+          PrintWriter serverPrintOut = new PrintWriter(new OutputStreamWriter(fromServer, "UTF-8"), true);
+          serverPrintOut.println("You have connected to the multiplayer chess server. You are player #" + player);
 
-        // TODO
-        // receive IP and send to other thread.
-        // send other threads IP to this.
+          boolean done = false;
+          // maybe pass it the thread name/number?
+          notify();
+          wait();
+
+          // TODO
+          // receive IP and send to other thread.
+          // send other threads IP to this.
 
 
-        while(!done && input.hasNextLine()) {
-          String line = input.nextLine();
-          // prints and sends back to client
-          System.out.println("Recived from client " + player + ": " + line);
-          serverPrintOut.println();
+          while(!done && input.hasNextLine()) {
+            String line = input.nextLine();
+            // prints and sends back to client
+            System.out.println("Recived from client " + player + ": " + line);
+            serverPrintOut.println("Back to client");
 
-          if (line.equals("QUIT")) {
-            done = true;
-            serverPrintOut.println("Closing Connection.");
+            if (line.equals("QUIT")) {
+              done = true;
+              serverPrintOut.println("Closing Connection.");
+            }
           }
+          notify();
         }
-      }
-      catch (IOException e) {
-        e.printStackTrace();
+        catch (IOException e) {
+          e.printStackTrace();
+        }
       }
     }
   }
