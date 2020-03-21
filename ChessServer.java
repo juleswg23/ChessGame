@@ -4,11 +4,10 @@ import java.util.Scanner;
 
 public class ChessServer
 {
+  //THIS ONE HAS THE SERIALIZABLE STUFF
 
   //public static final int MAX_CONNECTIONS = 2;
   public static final int PORT_NUMBER = 6789;
-  public int playerOne;
-  public int playerTwo;
 
   public static void main(String[] args) throws InterruptedException {
     // make the new socket and threads
@@ -77,14 +76,14 @@ public class ChessServer
         ) {
           System.out.println("Player " + player + " has connected");
 
-          OutputStream fromServer = listenerSocket.getOutputStream();
           InputStream toServer = listenerSocket.getInputStream();
+          OutputStream fromServer = listenerSocket.getOutputStream();
 
-          PrintWriter serverSendOut = new PrintWriter(new OutputStreamWriter(fromServer, "UTF-8"), true);
           Scanner input = new Scanner(toServer, "UTF-8");
+          PrintWriter serverSendOut = new PrintWriter(new OutputStreamWriter(fromServer, "UTF-8"), true);
 
-          ObjectOutputStream os = new ObjectOutputStream(fromServer);
-          ObjectInputStream is = new ObjectInputStream(toServer);
+          //ObjectInputStream is = new ObjectInputStream(toServer);
+          //ObjectOutputStream os = new ObjectOutputStream(fromServer);
 
           serverSendOut.println("You have connected to the multiplayer chess server. You are player #" + player);
           boolean done = false;
@@ -96,9 +95,9 @@ public class ChessServer
             if (messageInTransit != lastSentMessage) {
               // prints and sends to other client
               System.out.println("To " + player + ", " + "From " + sendingPlayer + ": " + messageInTransit);
-              System.out.println("TEST: " + objectInTransit);
-              os.writeObject(objectInTransit); //this changed
-              os.flush();
+              //System.out.println("TEST: " + objectInTransit);
+              //os.writeObject(objectInTransit); //this changed
+              //os.flush();
               // lastSentObject = objectInTransit;
               lastSentMessage = messageInTransit;
               notify();
@@ -107,7 +106,7 @@ public class ChessServer
                 // read message and pass on to other thread.
                 sendingPlayer = player;
                 messageInTransit = input.nextLine();
-                objectInTransit = is.readObject();
+                //objectInTransit = is.readObject();
                 notify();
                 wait();
               } catch (Exception e) {

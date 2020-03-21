@@ -7,8 +7,6 @@ public class ChessServerOLD
 
   //public static final int MAX_CONNECTIONS = 2;
   public static final int PORT_NUMBER = 6789;
-  public int playerOne;
-  public int playerTwo;
 
   public static void main(String[] args) throws InterruptedException {
     // make the new socket and threads
@@ -43,8 +41,8 @@ public class ChessServerOLD
 
     t1.start();
     t2.start();
-    t1.join();
-    t2.join();
+    //t1.join();
+    //t2.join();
   }
 
   public static class Connection
@@ -66,13 +64,12 @@ public class ChessServerOLD
       //synchronized(this){
         ServerSocket finalServerSocket = serverSocket;
 
-        int USERS_PORT = 17643;
         System.out.println("Server is active and waiting for players");
         int player = i;
 
-        try (
+        try {
           Socket listenerSocket = finalServerSocket.accept();
-        ) {
+
           System.out.println("Player " + player + " has connected");
 
           InputStream toServer = listenerSocket.getInputStream();
@@ -83,10 +80,8 @@ public class ChessServerOLD
 
           serverSendOut.println("You have connected to the multiplayer chess server. You are player #" + player);
 
-          boolean done = false;
-
-          // notify();
-          // wait();
+           // notify();
+           // wait();
 
           while (messageInTransit != lastSentMessage || input.hasNextLine()) {
             if (messageInTransit != lastSentMessage) {
@@ -99,17 +94,18 @@ public class ChessServerOLD
               // read message and pass on to other thread.
               sendingPlayer = player;
               messageInTransit = input.nextLine();
-              Thread.sleep(2000);
-              // notify();
-              // wait();
+              //Thread.sleep(200);
+               // notify();
+               // wait();
             }
           }
         }
         catch (IOException e) {
           e.printStackTrace();
         }
-
+      //} //comment out if not synchronized
     }
+
   }
 
 }
