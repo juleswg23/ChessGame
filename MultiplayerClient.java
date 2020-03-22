@@ -87,33 +87,33 @@ public class MultiplayerClient
 		});
 
 		// readMessage thread
-		Thread readMessage = new Thread(new Runnable()
-		{
-			@Override
-			public void run() {
-
-				while (true) {
-					try {
-						// read the message sent to this client
-						if (done) break;
-						String msg = dis.readUTF();
-						System.out.println(msg);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-
-				try {
-					// closing resources
-					done = true;
-					dos.close();
-					dis.close();
-
-				} catch(IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		// Thread readMessage = new Thread(new Runnable()
+		// {
+		// 	@Override
+		// 	public void run() {
+		//
+		// 		while (true) {
+		// 			try {
+		// 				// read the message sent to this client
+		// 				if (done) break;
+		// 				String msg = dis.readUTF();
+		// 				System.out.println(msg);
+		// 			} catch (IOException e) {
+		// 				e.printStackTrace();
+		// 			}
+		// 		}
+		//
+		// 		try {
+		// 			// closing resources
+		// 			done = true;
+		// 			dos.close();
+		// 			dis.close();
+		//
+		// 		} catch(IOException e) {
+		// 			e.printStackTrace();
+		// 		}
+		// 	}
+		// });
 
     Thread readBoard = new Thread(new Runnable()
 		{
@@ -146,7 +146,7 @@ public class MultiplayerClient
 			}
 		});
 
-		sendMessage.start();
+		//sendMessage.start();
     sendBoard.start();
 		//readMessage.start();
     readBoard.start();
