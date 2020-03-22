@@ -1,128 +1,163 @@
-import java.net.*;
-import java.io.*;
-import java.util.Scanner;
+// Java implementation of Server side
+// It contains two classes : Server and ClientHandler
+// Save file as Server.java
 
+import java.io.*;
+import java.util.*;
+import java.net.*;
+
+// Server class
 public class ChessServer
 {
-  //THIS ONE HAS THE SERIALIZABLE STUFF
 
-  //public static final int MAX_CONNECTIONS = 2;
-  public static final int PORT_NUMBER = 6789;
+	// Vector to store active clients
+	static Vector<ClientHandler> ar = new Vector<>();
 
-  public static void main(String[] args) throws InterruptedException {
-    // make the new socket and threads
-    final Connection connection = new Connection();
-    //final ServerSocket serverSocket = new ServerSocket(PORT_NUMBER);
+	// counter for clients
+	static int i = 0;
+	static int MAX_PLAYERS = 2;
 
-    Thread t1 = new Thread(new Runnable()
-    {
-      @Override
-      public void run()
-      {
-        try {
-          connection.createConnection(1);
-        } catch(InterruptedException e) {
-          e.printStackTrace();
-        }
-      }
-    });
+	public static void main(String[] args) throws IOException
+	{
+		// server is listening on port 6789
+		ServerSocket ss = new ServerSocket(6789);
 
-    Thread t2 = new Thread(new Runnable()
-    {
-      @Override
-      public void run()
-      {
-        try {
-          connection.createConnection(2);
-        } catch(InterruptedException e) {
-          e.printStackTrace();
-        }
-      }
-    });
+		Socket s;
 
-    t1.start();
-    t2.start();
-    t1.join();
-    t2.join();
-  }
+		// running infinite loop for getting
+		// client request
+		while (i < MAX_PLAYERS)
+		{
+			// Accept the incoming request
+			s = ss.accept();
 
-  public static class Connection
-  {
-    ServerSocket serverSocket = null;
-    public static Object objectInTransit = null;
-    public static Object lastSentObject = null;
-    public static String messageInTransit = "";
-    public static String lastSentMessage = "";
-    public static int sendingPlayer;
+			System.out.println("New client request received : " + s);
 
-    public Connection() {
-      try {
-        serverSocket = new ServerSocket(PORT_NUMBER);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
+			// obtain input and output streams
+			//InputStream toServer = s.getInputStream();
+			//OutputStream fromServer = s.getOutputStream();
 
-    public void createConnection(int i) throws InterruptedException {
-      synchronized(this){
-        ServerSocket finalServerSocket = serverSocket;
+			// obtaining input and out streams
+			//DataInputStream dis = new DataInputStream(s.getInputStream());
+			//DataOutputStream dos = new DataOutputStream(s.getOutputStream());
 
-        int USERS_PORT = 17643;
-        System.out.println("Server is active and waiting for players");
-        int player = i;
+			ObjectOutputStream dos = new ObjectOutputStream(s.getOutputStream());
+			ObjectInputStream dis = new ObjectInputStream(s.getInputStream());
 
-        try (
-          Socket listenerSocket = finalServerSocket.accept();
-        ) {
-          System.out.println("Player " + player + " has connected");
 
-          InputStream toServer = listenerSocket.getInputStream();
-          OutputStream fromServer = listenerSocket.getOutputStream();
+			System.out.println("Creating a new handler for this client...");
 
-          Scanner input = new Scanner(toServer, "UTF-8");
-          PrintWriter serverSendOut = new PrintWriter(new OutputStreamWriter(fromServer, "UTF-8"), true);
+			// Create a new handler object for handling this request.
+			ClientHandler mtch = new ClientHandler(s,"client " + i, dis, dos);
 
-          //ObjectInputStream is = new ObjectInputStream(toServer);
-          //ObjectOutputStream os = new ObjectOutputStream(fromServer);
+			// Create a new Thread with this object.
+			Thread t = new Thread(mtch);
 
-          serverSendOut.println("You have connected to the multiplayer chess server. You are player #" + player);
-          boolean done = false;
+			System.out.println("Adding this client to active client list");
 
-          notify();
-          wait();
+			// add this client to active clients list
+			ar.add(mtch);
 
-          while (messageInTransit != lastSentMessage || input.hasNextLine()) {
-            if (messageInTransit != lastSentMessage) {
-              // prints and sends to other client
-              System.out.println("To " + player + ", " + "From " + sendingPlayer + ": " + messageInTransit);
-              //System.out.println("TEST: " + objectInTransit);
-              //os.writeObject(objectInTransit); //this changed
-              //os.flush();
-              // lastSentObject = objectInTransit;
-              lastSentMessage = messageInTransit;
-              notify();
-            } else {
-              try {
-                // read message and pass on to other thread.
-                sendingPlayer = player;
-                messageInTransit = input.nextLine();
-                //objectInTransit = is.readObject();
-                notify();
-                wait();
-              } catch (Exception e) {
-                e.printStackTrace();
-              }
-            }
-          }
-        // } catch (EOFException e) {
-        //   e.printStackTrace();
-        // }
-      }
-        catch (IOException e) {
-          e.printStackTrace();
-        }
-      }
-    }
-  }
+			// start the thread.
+			t.start();
 
+			// increment i for new client.
+			// i is used for naming only, and can be replaced
+			// by any naming scheme
+			System.out.println(ar);
+			i++;
+
+
+		}
+	}
+}
+
+// ClientHandler class
+class ClientHandler implements Runnable
+{
+	Scanner scn = new Scanner(System.in);
+	private String name;
+	final ObjectInputStream dis;
+	final ObjectOutputStream dos;
+	Socket s;
+	boolean isloggedin;
+
+	// constructor
+	public ClientHandler(Socket s, String name,
+							ObjectInputStream dis, ObjectOutputStream dos) {
+		this.dis = dis;
+		this.dos = dos;
+		this.name = name;
+		this.s = s;
+		this.isloggedin=true;
+	}
+
+	@Override
+	public void run() {
+
+		String received;
+		while (true)
+		{
+			try
+			{
+				// receive the string
+				received = dis.readUTF();
+
+				System.out.println(received);
+
+				if(received.equals("logout")){
+					//tell other user that this dude logged out
+
+					for (ClientHandler mc : ChessServer.ar) {
+						if (!mc.name.equals(name)) {
+							try
+							{
+								// closing resources
+								mc.isloggedin = false;
+								mc.dis.close();
+								mc.dos.close();
+								mc.s.close();
+
+							}catch(Exception e){
+								e.printStackTrace();
+							}
+						}
+					}
+					this.isloggedin=false;
+					this.s.close();
+
+					break;
+				}
+				// search for the recipient in the connected devices list.
+				// ar is the vector storing client of active users
+				for (ClientHandler mc : ChessServer.ar)
+				{
+					// if the recipient is found, write on its
+					// output stream
+					if (!mc.name.equals(name))
+					{
+						mc.dos.writeUTF(this.name+" : "+received);
+						mc.dos.flush();
+						break;
+
+
+					}
+				}
+			} catch (IOException e) {
+
+				e.printStackTrace();
+			}
+
+		}
+		try
+		{
+			// closing resources
+			this.dis.close();
+			this.dos.close();
+			this.s.close();
+
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 }

@@ -1,84 +1,103 @@
+// Java implementation for multithreaded chat client
+// Save file as Client.java
+
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
-import javax.swing.*;
-
 
 public class MultiplayerClient
 {
+	final static int ServerPort = 6789;
+	public static boolean done = false;
 
-//DEALS WITH SERIALIZABLE
 
-  public static void main(String[] args) {
-    //String playerName = args[0];
+	public static void main(String args[]) throws UnknownHostException, IOException
+	{
+		Scanner scn = new Scanner(System.in);
 
-    String HOST_NAME = "localhost";
-    final int PORT_NUMBER = 6789;
+		// getting localhost ip
+		InetAddress ip = InetAddress.getByName("localhost");
 
-    try (
-      Socket userSocket = new Socket(HOST_NAME, PORT_NUMBER);
-    ) {
+		// establish the connection
+		Socket s = new Socket(ip, ServerPort);
 
-      OutputStream fromClient = userSocket.getOutputStream();
-      InputStream toClient = userSocket.getInputStream();
+		//InputStream toServer = s.getInputStream();
+		//OutputStream fromServer = s.getOutputStream();
 
-      PrintWriter clientSendOut = new PrintWriter(new OutputStreamWriter(fromClient, "UTF-8"), true);
-      Scanner input = new Scanner(toClient, "UTF-8");
+		// obtaining input and out streams
+		//DataInputStream dis = new DataInputStream(toServer);
+		//DataOutputStream dos = new DataOutputStream(fromServer);
 
-      //ObjectOutputStream os = new ObjectOutputStream(fromClient);
-      //ObjectInputStream is = new ObjectInputStream(toClient);
+		ObjectOutputStream dos = new ObjectOutputStream(s.getOutputStream());
+		ObjectInputStream dis = new ObjectInputStream(s.getInputStream());
 
-      //temp
-      Scanner userType = new Scanner(System.in);
+		// sendMessage thread
+		Thread sendMessage = new Thread(new Runnable()
+		{
+			@Override
+			public void run() {
+				while (true) {
 
-      String messageToSend = "";
-      String messageToReceive = input.nextLine();
-      System.out.println(messageToReceive);
+					// read the message to deliver.
+					String msg = scn.nextLine();
 
-      Object objectToSend = "";
-      Object objectToReceive = null;
+					try {
+						// write on the output stream
+						dos.writeUTF(msg);
+						dos.flush();
+						System.out.println("Sent: " + msg);
+						if (msg.equals("logout")) {
+							break;
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 
-      //int player = 2; //this was a test
-      int player = Integer.parseInt(messageToReceive.substring(messageToReceive.length() - 1));
+				try
+				{
+					// closing resources
+					done = true;
+					dos.close();
+					dis.close();
 
-      if (player == 1) {
-        // TODO last thing
-        // replace this with the game the gets passed back and forth
-        // instead of the user typing.
-        while (userType.hasNextLine()) {
-          clientSendOut.println(userType.nextLine());
-          //Board b = new Board();
-          //os.writeObject(b);
-          //os.flush();
-          break;
-        }
-      }
+				}catch(IOException e){
+					e.printStackTrace();
+				}
+			}
+		});
 
-      while (input.hasNextLine()) {
-        messageToReceive = input.nextLine();
-        System.out.println(messageToReceive);
-        // try {
-        //   objectToReceive = is.readObject();
-        //   System.out.println(objectToReceive);
-        // } catch (Exception e) {
-        //   e.printStackTrace();
-        // }
+		// readMessage thread
+		Thread readMessage = new Thread(new Runnable()
+		{
+			@Override
+			public void run() {
 
-        while (userType.hasNextLine()) {
-          clientSendOut.println(userType.nextLine());
-          break;
-        }
-      }
+				while (true) {
+					try {
+						// read the message sent to this client
+						if (done) break;
+						String msg = dis.readUTF();
+						System.out.println(msg);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+				try
+				{
+					// closing resources
+					done = true;
+					dos.close();
+					dis.close();
 
-      userSocket.close();
+				}catch(IOException e){
+					e.printStackTrace();
+				}
+			}
+		});
 
-    } catch (UnknownHostException e) {
-        System.err.println("Don't know about host " + HOST_NAME);
-        System.exit(1);
-    } catch (IOException e) {
-        System.err.println("Couldn't get I/O for the connection to " +
-            HOST_NAME);
-        System.exit(1);
-    }
-  }
+		sendMessage.start();
+		readMessage.start();
+
+	}
 }
