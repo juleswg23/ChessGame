@@ -13,8 +13,9 @@ public class MultiplayerClient
 	Board myBoard;
 
 	public MultiplayerClient(Board b) throws UnknownHostException, IOException {
-		play();
 		myBoard = b;
+		play();
+
 	}
 
 	public void play() throws UnknownHostException, IOException {
