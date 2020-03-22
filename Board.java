@@ -139,19 +139,20 @@ public class Board extends JPanel implements Serializable
     int r = 7 - e.getY() / CELL_SIZE;
     Piece p = findPiece(new Point(c,r));
 
-    makeMove(p, new Point(c,r));
+    if (!clicked && p != null && p.getWhite() == whiteTurn) {
+      p.setClicked(!p.getClicked());
+      resetHelper(p);
+    } else {
+      makeMove(p, new Point(c,r));
+    }
   }
 
-  // need to write this to call clicked
+  // Assumes that piece has been highlighted
   public void makeMove(Piece p, Point destPos) {
     int c = destPos.x;
     int r = destPos.y;
 
-    if (!clicked && p != null && p.getWhite() == whiteTurn) {
-      p.setClicked(!p.getClicked());
-      resetHelper(p);
-
-    } else if (clicked && p != null) {
+     if (clicked && p != null) {
       if (p.getClicked()) { //reset clicked piece
         p.setClicked(!p.getClicked());
         resetHelper(null);

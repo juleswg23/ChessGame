@@ -31,10 +31,11 @@ public class Chess
         KeyEvent.VK_N, ActionEvent.META_MASK));
     newGame.addActionListener(new NewGameAction(b));
     menu.add(newGame);
+
     JMenuItem multiplayerGame = new JMenuItem("Multiplayer Game");
     multiplayerGame.setAccelerator(KeyStroke.getKeyStroke(
         KeyEvent.VK_M, ActionEvent.META_MASK));
-    multiplayerGame.addActionListener(new MultiplayerClientAction());
+    multiplayerGame.addActionListener(new MultiplayerClientAction(b));
     menu.add(multiplayerGame);
 
     mb.add(menu);
