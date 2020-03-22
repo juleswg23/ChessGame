@@ -4,6 +4,8 @@
 import java.io.*;
 import java.net.*;
 import java.util.Scanner;
+import java.awt.Point;
+
 
 public class MultiplayerClient
 {
@@ -76,10 +78,13 @@ public class MultiplayerClient
 			public void run() {
 				while (true) {
 					try {
-            // make a board to send.
+            // make a board and make a move to send.
+						// This will be user input
+						myBoard.makeMove(myBoard.getPieces().get(0), new Point(0,3));
             dos.writeObject(myBoard);
             dos.flush();
 						System.out.println("Sent: " + myBoard.toString());
+						//eventually remove break
             break;
 					} catch (IOException e) {
 						e.printStackTrace();
