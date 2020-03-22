@@ -21,11 +21,11 @@ public class Board extends JPanel implements Serializable
   public static final int HEIGHT = 512;
   public static final int CELL_SIZE = WIDTH/8;
 
-  public boolean clicked = false;
-  public boolean whiteTurn = true;
-  public Piece clickedPiece = null;
-  public King whiteKing = new King(new Point(4, 0), true);
-  public King blackKing = new King(new Point(4, 7), false);
+  private boolean clicked = false;
+  private boolean whiteTurn = true;
+  private Piece clickedPiece = null;
+  private King whiteKing = new King(new Point(4, 0), true);
+  private King blackKing = new King(new Point(4, 7), false);
 
   private ArrayList<Piece> pieces = new ArrayList<>();
 
@@ -151,11 +151,11 @@ public class Board extends JPanel implements Serializable
       p.setClicked(!p.getClicked());
       resetHelper(p);
 
-    } else if (clicked && p != null){
+    } else if (clicked && p != null) {
       if (p.getClicked()) { //reset clicked piece
         p.setClicked(!p.getClicked());
         resetHelper(null);
-      } else if (clickedPiece.getWhite() != p.getWhite() && clickedPiece.getWhite() == whiteTurn){
+      } else if (clickedPiece.getWhite() != p.getWhite() && clickedPiece.getWhite() == whiteTurn) {
         if (isLegalCapture(clickedPiece, new Point(c,r)))  {
           if (!movePiece(new Point(c,r), p)) {
             clickedPiece.setClicked(false);
@@ -299,41 +299,69 @@ public class Board extends JPanel implements Serializable
     if (whiteTurn && check(whiteKing)) {
       clickedPiece.position.setLocation(oldLocation);
       return true;
-    } else if (!whiteTurn && check(blackKing)){
+    } else if (!whiteTurn && check(blackKing)) {
       clickedPiece.position.setLocation(oldLocation);
       return true;
     }
     return false;
   }
 
-  //GETTERS
+  //GETTERS and SETTERS
   public boolean getClicked() {
     return clicked;
   }
 
-  public boolean getWhiteTurn (){
+  public void setClicked(boolean c) {
+    clicked = c;
+  }
+
+  public boolean getWhiteTurn () {
     return whiteTurn;
+  }
+
+  public void setWhiteTurn(boolean t) {
+    whiteTurn = t;
   }
 
   public Piece getClickedPiece() {
     return clickedPiece;
   }
 
+  public void setClickedPiece(Piece p) {
+    clickedPiece = p;
+  }
+
   public King getWhiteKing() {
     return whiteKing;
   }
+
+  public void setWhiteKing(King k) {
+    whiteKing = k;
+  }
+
   public King getBlackKing() {
     return blackKing;
+  }
+
+  public void setBlackKing(King k) {
+    blackKing = k;
   }
 
   public ArrayList<Piece> getPieces() {
     return pieces;
   }
 
+  public void setPieces(ArrayList<Piece> p) {
+    pieces = p;
+  }
+
+
+  // Just for checks for Serializable stuff
   public String toString() {
     return pieces.toString();
   }
 
+  // Just for checks for Serializable stuff
   public boolean equals(Board b) {
     boolean same = this.toString().equals(b.toString()) &&
             this.getClicked() == b.getClicked() &&

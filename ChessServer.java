@@ -17,8 +17,7 @@ public class ChessServer
 	static int i = 0;
 	static int MAX_PLAYERS = 2;
 
-	public static void main(String[] args) throws IOException
-	{
+	public static void main(String[] args) throws IOException {
 		// server is listening on port 6789
 		ServerSocket ss = new ServerSocket(6789);
 
@@ -32,14 +31,6 @@ public class ChessServer
 			s = ss.accept();
 
 			System.out.println("New client request received : " + s);
-
-			// obtain input and output streams
-			//InputStream toServer = s.getInputStream();
-			//OutputStream fromServer = s.getOutputStream();
-
-			// obtaining input and out streams
-			//DataInputStream dis = new DataInputStream(s.getInputStream());
-			//DataOutputStream dos = new DataOutputStream(s.getOutputStream());
 
 			ObjectOutputStream dos = new ObjectOutputStream(s.getOutputStream());
 			ObjectInputStream dis = new ObjectInputStream(s.getInputStream());
@@ -95,30 +86,30 @@ class ClientHandler implements Runnable
 	@Override
 	public void run() {
 
-		String received;
-		while (true)
-		{
-			try
-			{
+		String received = "";
+		Board b;
+
+		while (true) {
+			try {
 				// receive the string
-				received = dis.readUTF();
+				b = (Board) dis.readObject();
+				System.out.println("Received: " + b.toString());
 
-				System.out.println(received);
+				//received = dis.readUTF();
+				//System.out.println(received);
 
-				if(received.equals("logout")){
+				if(received.equals("logout")) {
 					//tell other user that this dude logged out
-
-					for (ClientHandler mc : ChessServer.ar) {
+          for (ClientHandler mc : ChessServer.ar) {
 						if (!mc.name.equals(name)) {
-							try
-							{
+							try {
 								// closing resources
 								mc.isloggedin = false;
 								mc.dis.close();
 								mc.dos.close();
 								mc.s.close();
 
-							}catch(Exception e){
+							}catch(Exception e) {
 								e.printStackTrace();
 							}
 						}
@@ -130,33 +121,31 @@ class ClientHandler implements Runnable
 				}
 				// search for the recipient in the connected devices list.
 				// ar is the vector storing client of active users
-				for (ClientHandler mc : ChessServer.ar)
-				{
+				for (ClientHandler mc : ChessServer.ar) {
 					// if the recipient is found, write on its
 					// output stream
-					if (!mc.name.equals(name))
-					{
-						mc.dos.writeUTF(this.name+" : "+received);
+					if (!mc.name.equals(name)) {
+						mc.dos.writeObject(b);
+						//mc.dos.writeUTF(this.name+" : "+received);
 						mc.dos.flush();
+						System.out.println("sent: " + b.toString());
 						break;
-
-
 					}
 				}
 			} catch (IOException e) {
-
+				e.printStackTrace();
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 		}
-		try
-		{
+		try {
 			// closing resources
 			this.dis.close();
 			this.dos.close();
 			this.s.close();
 
-		}catch(Exception e){
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}

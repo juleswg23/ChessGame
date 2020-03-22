@@ -11,8 +11,7 @@ public class MultiplayerClient
 	public static boolean done = false;
 
 
-	public static void main(String args[]) throws UnknownHostException, IOException
-	{
+	public static void main(String args[]) throws UnknownHostException, IOException {
 		Scanner scn = new Scanner(System.in);
 
 		// getting localhost ip
@@ -21,19 +20,11 @@ public class MultiplayerClient
 		// establish the connection
 		Socket s = new Socket(ip, ServerPort);
 
-		//InputStream toServer = s.getInputStream();
-		//OutputStream fromServer = s.getOutputStream();
-
-		// obtaining input and out streams
-		//DataInputStream dis = new DataInputStream(toServer);
-		//DataOutputStream dos = new DataOutputStream(fromServer);
-
 		ObjectOutputStream dos = new ObjectOutputStream(s.getOutputStream());
 		ObjectInputStream dis = new ObjectInputStream(s.getInputStream());
 
 		// sendMessage thread
-		Thread sendMessage = new Thread(new Runnable()
-		{
+		Thread sendMessage = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				while (true) {
@@ -54,15 +45,32 @@ public class MultiplayerClient
 					}
 				}
 
-				try
-				{
+				try {
 					// closing resources
 					done = true;
 					dos.close();
 					dis.close();
 
-				}catch(IOException e){
+				} catch(IOException e) {
 					e.printStackTrace();
+				}
+			}
+		});
+
+    Thread sendBoard = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while (true) {
+					try {
+            // make a board to send.
+            Board b = new Board();
+            dos.writeObject(b);
+            dos.flush();
+						System.out.println("Sent: " + b.toString());
+            break;
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		});
@@ -83,21 +91,54 @@ public class MultiplayerClient
 						e.printStackTrace();
 					}
 				}
-				try
-				{
+
+				try {
 					// closing resources
 					done = true;
 					dos.close();
 					dis.close();
 
-				}catch(IOException e){
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+
+    Thread readBoard = new Thread(new Runnable()
+		{
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						// read the message sent to this client
+						if (done) {
+              break;
+            }
+						Board b = (Board) dis.readObject();
+						System.out.println(b.toString());
+					} catch (IOException e) {
+						e.printStackTrace();
+					} catch (ClassNotFoundException e) {
+            e.printStackTrace();
+          }
+				}
+
+				try {
+					// closing resources
+					done = true;
+					dos.close();
+					dis.close();
+
+				} catch(IOException e) {
 					e.printStackTrace();
 				}
 			}
 		});
 
 		sendMessage.start();
-		readMessage.start();
+    sendBoard.start();
+		//readMessage.start();
+    readBoard.start();
 
 	}
 }
