@@ -7,18 +7,27 @@ import java.util.Scanner;
 
 public class MultiplayerClient
 {
-	final static int ServerPort = 6789;
+	final static int SERVER_PORT = 6789;
 	public static boolean done = false;
 
 
 	public static void main(String args[]) throws UnknownHostException, IOException {
 		Scanner scn = new Scanner(System.in);
+    Socket s = null;
 
 		// getting localhost ip
 		InetAddress ip = InetAddress.getByName("localhost");
 
 		// establish the connection
-		Socket s = new Socket(ip, ServerPort);
+    try {
+  		s = new Socket(ip, SERVER_PORT);
+    } catch (ConnectException eOne) {
+      try {
+        s = new Socket("10.0.1.106", SERVER_PORT);
+      } catch (Exception eTwo) {
+        eTwo.printStackTrace();
+      }
+    }
 
 		ObjectOutputStream dos = new ObjectOutputStream(s.getOutputStream());
 		ObjectInputStream dis = new ObjectInputStream(s.getInputStream());
