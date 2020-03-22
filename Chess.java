@@ -26,11 +26,16 @@ public class Chess
 
     JMenuBar mb = new JMenuBar();
     JMenu menu = new JMenu("Menu");
-    JMenuItem newGameMenu = new JMenuItem("New Game");
-    newGameMenu.setAccelerator(KeyStroke.getKeyStroke(
+    JMenuItem newGame = new JMenuItem("New Game");
+    newGame.setAccelerator(KeyStroke.getKeyStroke(
         KeyEvent.VK_N, ActionEvent.META_MASK));
-    newGameMenu.addActionListener(new NewGameAction(b));
-    menu.add(newGameMenu);
+    newGame.addActionListener(new NewGameAction(b));
+    menu.add(newGame);
+    JMenuItem multiplayerGame = new JMenuItem("Multiplayer Game");
+    multiplayerGame.setAccelerator(KeyStroke.getKeyStroke(
+        KeyEvent.VK_M, ActionEvent.META_MASK));
+    multiplayerGame.addActionListener(new MultiplayerClientAction());
+    menu.add(multiplayerGame);
 
     mb.add(menu);
     System.setProperty("apple.laf.useScreenMenuBar", "true");
