@@ -78,7 +78,7 @@ public class MultiplayerClient
             // make a board to send.
             dos.writeObject(myBoard);
             dos.flush();
-						System.out.println("Sent: " + b.toString());
+						System.out.println("Sent: " + myBoard.toString());
             break;
 					} catch (IOException e) {
 						e.printStackTrace();
