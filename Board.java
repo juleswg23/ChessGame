@@ -54,7 +54,7 @@ public class Board extends JPanel implements Serializable
       }
     }
     for (Piece p : pieces) {
-      String filePath = "Pictures/" + p.toString() + ".png";
+      String filePath = "Pictures/" + p.toString().substring(0,3) + ".png";
       int x = (p.position.x) * CELL_SIZE;
       int y = (7 - p.position.y) * CELL_SIZE;
       try {

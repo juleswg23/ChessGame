@@ -24,7 +24,8 @@ public class Knight extends Piece
   public String toString() {
     String str = "BN";
     if (getWhite()) str = "WN";
-    if (getClicked()) str = str + "H";
+    if (getClicked()) str += "H";
+    else str += "U";
 // this is new but not needed
     str += position.x;
     str += position.y;
