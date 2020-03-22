@@ -2,6 +2,14 @@ import java.io.*;
 
 public class TestSerial implements Serializable {
 
+  public TestSerial() {
+    try {
+      this.whenSerializingAndDeserializing_ThenObjectIsTheSame();
+    } catch(Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   public void whenSerializingAndDeserializing_ThenObjectIsTheSame ()
   throws IOException, ClassNotFoundException {
     Board b1 = new Board();
@@ -30,11 +38,7 @@ public class TestSerial implements Serializable {
 
   public static void main(String args[]) {
     TestSerial t = new TestSerial();
-    try {
-      t.whenSerializingAndDeserializing_ThenObjectIsTheSame();
-    } catch(Exception e) {
-      e.printStackTrace();
-    }
+
   }
 
 }

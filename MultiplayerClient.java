@@ -10,9 +10,11 @@ public class MultiplayerClient
 	final static int SERVER_PORT = 6789;
 	public static boolean done = false;
 
+	public MultiplayerClient() throws UnknownHostException, IOException {
+		play();
+	}
 
-	public static void main(String args[]) throws UnknownHostException, IOException {
-		Scanner scn = new Scanner(System.in);
+	public void play() throws UnknownHostException, IOException {
     Socket s = null;
 
 		// getting localhost ip
@@ -32,39 +34,39 @@ public class MultiplayerClient
 		ObjectOutputStream dos = new ObjectOutputStream(s.getOutputStream());
 		ObjectInputStream dis = new ObjectInputStream(s.getInputStream());
 
-		// sendMessage thread
-		Thread sendMessage = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (true) {
-
-					// read the message to deliver.
-					String msg = scn.nextLine();
-
-					try {
-						// write on the output stream
-						dos.writeUTF(msg);
-						dos.flush();
-						System.out.println("Sent: " + msg);
-						if (msg.equals("logout")) {
-							break;
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-
-				try {
-					// closing resources
-					done = true;
-					dos.close();
-					dis.close();
-
-				} catch(IOException e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		// // sendMessage thread
+		// Thread sendMessage = new Thread(new Runnable() {
+		// 	@Override
+		// 	public void run() {
+		// 		while (true) {
+		//
+		// 			// read the message to deliver.
+		// 			String msg = scn.nextLine();
+		//
+		// 			try {
+		// 				// write on the output stream
+		// 				dos.writeUTF(msg);
+		// 				dos.flush();
+		// 				System.out.println("Sent: " + msg);
+		// 				if (msg.equals("logout")) {
+		// 					break;
+		// 				}
+		// 			} catch (IOException e) {
+		// 				e.printStackTrace();
+		// 			}
+		// 		}
+		//
+		// 		try {
+		// 			// closing resources
+		// 			done = true;
+		// 			dos.close();
+		// 			dis.close();
+		//
+		// 		} catch(IOException e) {
+		// 			e.printStackTrace();
+		// 		}
+		// 	}
+		// });
 
     Thread sendBoard = new Thread(new Runnable() {
 			@Override
@@ -150,4 +152,9 @@ public class MultiplayerClient
     readBoard.start();
 
 	}
+
+	public static void main(String args[]) throws UnknownHostException, IOException {
+		MultiplayerClient m = new MultiplayerClient();
+	}
+
 }

@@ -11,11 +11,11 @@ import java.awt.event.*;
 public class Chess
 {
 
+
   public static final int WIDTH = 512;
   public static final int HEIGHT = 512;
 
   public static void main(String[] args) {
-
 
     JFrame frame = new JFrame("Chess");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
