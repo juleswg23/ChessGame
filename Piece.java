@@ -42,7 +42,7 @@ abstract class Piece implements Serializable
     if (white) str = "W";
     str += this.getClass().getName().substring(0, 1);
     if (clicked) str += "H";
-    else += "U"
+    else str += "U";
 
     // new but not needed
     str += position.x;
