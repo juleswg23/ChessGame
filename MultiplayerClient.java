@@ -9,13 +9,15 @@ public class MultiplayerClient
 {
 	final static int SERVER_PORT = 6789;
 	public static boolean done = false;
+	Socket s = null;
+	Board myBoard;
 
-	public MultiplayerClient() throws UnknownHostException, IOException {
+	public MultiplayerClient(Board b) throws UnknownHostException, IOException {
 		play();
+		myBoard = b;
 	}
 
 	public void play() throws UnknownHostException, IOException {
-    Socket s = null;
 
 		// getting localhost ip
 		InetAddress ip = InetAddress.getByName("localhost");
@@ -74,8 +76,7 @@ public class MultiplayerClient
 				while (true) {
 					try {
             // make a board to send.
-            Board b = new Board();
-            dos.writeObject(b);
+            dos.writeObject(myBoard);
             dos.flush();
 						System.out.println("Sent: " + b.toString());
             break;
@@ -154,7 +155,7 @@ public class MultiplayerClient
 	}
 
 	public static void main(String args[]) throws UnknownHostException, IOException {
-		MultiplayerClient m = new MultiplayerClient();
+		MultiplayerClient m = new MultiplayerClient(new Board());
 	}
 
 }
