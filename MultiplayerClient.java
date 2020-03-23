@@ -11,8 +11,6 @@ public class MultiplayerClient implements Serializable
 	final static int SERVER_PORT = 6789;
 	public static boolean done = false;
 	Socket s = null;
-	InputStream fromServer;
-	OutputStream toServer;
 	ObjectOutputStream dos;
 	ObjectInputStream dis;
 
@@ -39,15 +37,35 @@ public class MultiplayerClient implements Serializable
       }
     }
 
-		toServer = s.getOutputStream();
-		fromServer = s.getInputStream();
-		dos = new ObjectOutputStream(toServer);
-		dis = new ObjectInputStream(fromServer);
+		dos = new ObjectOutputStream(s.getOutputStream());
+		dis = new ObjectInputStream(s.getInputStream());
 
 		play();
 	}
 
 	public void play() {
+
+    // Thread sendBoard = new Thread(new Runnable() {
+		// 	@Override
+		// 	public void run() {
+		// 			while (true) {
+		// 				try {
+		//
+		// 					// make a board and make a move to send.
+		// 					// This will be user input
+		// 					myBoard.makeMove(myBoard.getPieces().get(0), new Point(0,4));
+		//
+	  //           dos.writeObject(myBoard);
+	  //           dos.flush();
+		// 					System.out.println("Sent: " + myBoard.toString());
+		// 					//eventually remove break
+	  //           break;
+		// 				} catch (IOException e) {
+		// 					e.printStackTrace();
+		// 				}
+		// 			}
+		// 	}
+		// });
 
     Thread readBoard = new Thread(new Runnable()
 		{
@@ -89,11 +107,8 @@ public class MultiplayerClient implements Serializable
 
 	public void sendToServer(Board b) {
 		try {
-			dos = new ObjectOutputStream(toServer);
-			dos.writeObject(b);
-			System.out.println(b);
+			dos.writeUnshared(b);
 			dos.flush();
-			dos.close();
 			System.out.println("Sent");
 		} catch (IOException e) {
 			e.printStackTrace();

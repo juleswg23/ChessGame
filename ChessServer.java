@@ -92,7 +92,7 @@ class ClientHandler implements Runnable
 		while (true) {
 			try {
 				// receive the string
-				b = (Board) dis.readObject();
+				b = (Board) dis.readUnshared();
 				System.out.println("Received from board: " + this.name);
 				System.out.println(b.toString());
 
