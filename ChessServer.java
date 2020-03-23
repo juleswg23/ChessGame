@@ -17,6 +17,7 @@ public class ChessServer
 	static int i = 0;
 	static int MAX_PLAYERS = 2;
 	final static int SERVER_PORT = 6172;
+	private final static String PASSWORD = "jandschess";
 
 	public static void main(String[] args) throws IOException {
 		ServerSocket ss = new ServerSocket(SERVER_PORT);
@@ -31,32 +32,37 @@ public class ChessServer
 
 			System.out.println("New client request received : " + s);
 
-			ObjectOutputStream dos = new ObjectOutputStream(s.getOutputStream());
-			ObjectInputStream dis = new ObjectInputStream(s.getInputStream());
+			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 
 
 			System.out.println("Creating a new handler for this client...");
 
 			// Create a new handler object for handling this request.
-			ClientHandler mtch = new ClientHandler(s,"client " + i, dis, dos);
+			ClientHandler ch = new ClientHandler(s,"client " + i, ois, oos);
 
-			// Create a new Thread with this object.
-			Thread t = new Thread(mtch);
+			System.out.println("got here");
+			if (ch.ois.readUTF().equals(PASSWORD)) {
+				ch.oos.writeBoolean(true);
+				ch.oos.flush();
 
-			System.out.println("Adding this client to active client list");
+				// Create a new Thread with this object.
+				Thread t = new Thread(ch);
 
-			// add this client to active clients list
-			ar.add(mtch);
+				System.out.println("Adding this client to active client list");
 
-			// start the thread.
-			t.start();
+				// add this client to active clients list
+				ar.add(ch);
 
-			// increment i for new client.
-			// i is used for naming only, and can be replaced
-			// by any naming scheme
-			System.out.println(ar);
-			i++;
+				// start the thread.
+				t.start();
 
+				// increment i for new client.
+				// i is used for naming only, and can be replaced
+				// by any naming scheme
+				System.out.println(ar);
+				i++;
+			}
 
 		}
 	}
@@ -67,17 +73,17 @@ class ClientHandler implements Runnable
 {
 	Scanner scn = new Scanner(System.in);
 	private String name;
-	final ObjectInputStream dis;
-	final ObjectOutputStream dos;
-	Socket s;
-	boolean isloggedin;
+	public final ObjectInputStream ois;
+	public final ObjectOutputStream oos;
+	private Socket s;
+	public boolean isloggedin;
 	private Board b;
 
 	// constructor
 	public ClientHandler(Socket s, String name,
-							ObjectInputStream dis, ObjectOutputStream dos) {
-		this.dis = dis;
-		this.dos = dos;
+							ObjectInputStream ois, ObjectOutputStream oos) {
+		this.ois = ois;
+		this.oos = oos;
 		this.name = name;
 		this.s = s;
 		this.isloggedin=true;
@@ -91,7 +97,7 @@ class ClientHandler implements Runnable
 		while (true) {
 			try {
 				// receive the board
-				b = (Board) dis.readUnshared();
+				b = (Board) ois.readUnshared();
 				System.out.println("Received from board: " + this.name);
 
 
@@ -105,9 +111,9 @@ class ClientHandler implements Runnable
 					// if the recipient is found, write on its
 					// output stream
 					if (!ch.name.equals(name)) {
-						ch.dos.reset();
-						ch.dos.writeObject(b);
-						ch.dos.flush();
+						ch.oos.reset();
+						ch.oos.writeObject(b);
+						ch.oos.flush();
 						System.out.println("sent to board: " + ch.name);
 						break;
 					}
@@ -121,8 +127,8 @@ class ClientHandler implements Runnable
 		}
 		try {
 			// closing resources
-			this.dis.close();
-			this.dos.close();
+			this.ois.close();
+			this.oos.close();
 			this.s.close();
 
 		} catch(Exception e) {

@@ -11,8 +11,9 @@ public class MultiplayerClient implements Serializable
 	final static int SERVER_PORT = 6172;
 	public static boolean done = false;
 	Socket s = null;
-	ObjectOutputStream dos;
-	ObjectInputStream dis;
+	ObjectOutputStream oos;
+	ObjectInputStream ois;
+	private final static String PASSWORD = "jandschess";
 
 	Board myBoard;
 
@@ -37,10 +38,16 @@ public class MultiplayerClient implements Serializable
       }
     }
 
-		dos = new ObjectOutputStream(s.getOutputStream());
-		dis = new ObjectInputStream(s.getInputStream());
+		oos = new ObjectOutputStream(s.getOutputStream());
+		ois = new ObjectInputStream(s.getInputStream());
 
-		play();
+		//maybe have a gameid/password the user can use
+		oos.writeUTF(PASSWORD);
+		oos.flush();
+
+		if (ois.readBoolean()) {
+			play();
+		}
 	}
 
 	public void play() {
@@ -55,8 +62,8 @@ public class MultiplayerClient implements Serializable
 		// 					// This will be user input
 		// 					myBoard.makeMove(myBoard.getPieces().get(0), new Point(0,4));
 		//
-	  //           dos.writeObject(myBoard);
-	  //           dos.flush();
+	  //           oos.writeObject(myBoard);
+	  //           oos.flush();
 		// 					System.out.println("Sent: " + myBoard.toString());
 		// 					//eventually remove break
 	  //           break;
@@ -77,7 +84,7 @@ public class MultiplayerClient implements Serializable
               break;
             }
 						//this might not work too hot.
-						Board b = (Board) dis.readUnshared();
+						Board b = (Board) ois.readUnshared();
 						myBoard.setUpBoard(b.getWhiteTurn(), b.getWhiteKing(), b.getBlackKing(), b.getPieces());
 						System.out.println("Received");
 
@@ -91,8 +98,8 @@ public class MultiplayerClient implements Serializable
 				try {
 					// closing resources
 					done = true;
-					dos.close();
-					dis.close();
+					oos.close();
+					ois.close();
 
 				} catch(IOException e) {
 					e.printStackTrace();
@@ -107,9 +114,9 @@ public class MultiplayerClient implements Serializable
 
 	public void sendToServer(Board b) {
 		try {
-			dos.reset();
-			dos.writeObject(b);
-			dos.flush();
+			oos.reset();
+			oos.writeObject(b);
+			oos.flush();
 			System.out.println("Sent");
 		} catch (IOException e) {
 			e.printStackTrace();
