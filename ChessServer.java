@@ -72,6 +72,7 @@ class ClientHandler implements Runnable
 	final ObjectOutputStream dos;
 	Socket s;
 	boolean isloggedin;
+	private Board b;
 
 	// constructor
 	public ClientHandler(Socket s, String name,
@@ -91,8 +92,9 @@ class ClientHandler implements Runnable
 		while (true) {
 			try {
 				// receive the string
-				Board b = (Board) dis.readObject();
+				b = (Board) dis.readObject();
 				System.out.println("Received from board: " + this.name);
+				System.out.println(b.toString());
 
 				//received = dis.readUTF();
 				//System.out.println(received);
@@ -108,6 +110,7 @@ class ClientHandler implements Runnable
 					// output stream
 					if (!ch.name.equals(name)) {
 						ch.dos.writeObject(b);
+						System.out.println(b.toString());
 						//ch.dos.writeUTF(this.name+" : "+received);
 						ch.dos.flush();
 						System.out.println("sent to board: " + ch.name);

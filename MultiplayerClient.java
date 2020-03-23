@@ -85,9 +85,11 @@ public class MultiplayerClient implements Serializable
 
 	public void sendToServer(Board b) {
 		try {
+			dos = new ObjectOutputStream(s.getOutputStream());
 			dos.writeObject(b);
 			System.out.println(b);
 			dos.flush();
+			dos.close();
 			System.out.println("Sent");
 		} catch (IOException e) {
 			e.printStackTrace();
