@@ -11,6 +11,8 @@ public class MultiplayerClient implements Serializable
 	final static int SERVER_PORT = 6789;
 	public static boolean done = false;
 	Socket s = null;
+	InputStream fromServer;
+	OutputStream toServer;
 	ObjectOutputStream dos;
 	ObjectInputStream dis;
 
@@ -37,8 +39,10 @@ public class MultiplayerClient implements Serializable
       }
     }
 
-		dos = new ObjectOutputStream(s.getOutputStream());
-		dis = new ObjectInputStream(s.getInputStream());
+		toServer = s.getOutputStream();
+		fromServer = s.getInputStream();
+		dos = new ObjectOutputStream(toServer);
+		dis = new ObjectInputStream(fromServer);
 
 		play();
 	}
@@ -85,7 +89,7 @@ public class MultiplayerClient implements Serializable
 
 	public void sendToServer(Board b) {
 		try {
-			dos = new ObjectOutputStream(s.getOutputStream());
+			dos = new ObjectOutputStream(toServer);
 			dos.writeObject(b);
 			System.out.println(b);
 			dos.flush();
