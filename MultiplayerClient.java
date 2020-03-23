@@ -39,6 +39,7 @@ public class MultiplayerClient implements Serializable
 
 		dos = new ObjectOutputStream(s.getOutputStream());
 		dis = new ObjectInputStream(s.getInputStream());
+		
 		play();
 	}
 
@@ -72,7 +73,6 @@ public class MultiplayerClient implements Serializable
 			public void run() {
 				while (true) {
 					try {
-						// read the message sent to this client
 						if (done) {
               break;
             }

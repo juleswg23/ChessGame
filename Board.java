@@ -65,7 +65,9 @@ public class Board extends JPanel implements Serializable
         BufferedImage img = ImageIO.read(new File(filePath));
         Image newImage = img.getScaledInstance(CELL_SIZE, CELL_SIZE, Image.SCALE_SMOOTH);
         g.drawImage(newImage, x, y, null);
-      } catch (Exception e) {}
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
   }
 
@@ -152,7 +154,7 @@ public class Board extends JPanel implements Serializable
       if (makeMove(clickedPiece, new Point(c,r))) {
         whiteTurn = !whiteTurn;
         resetHelper(null);
-        
+
         if (multiplayer) {
           mc.sendToServer(this);
         }
@@ -339,7 +341,10 @@ public class Board extends JPanel implements Serializable
     setWhiteKing(whiteK);
     setBlackKing(blackK);
     setPieces(p);
+    setClicked(false);
+    setClickedPiece(null);
     repaint();
+    System.out.println("updated board");
   }
 
   public boolean getClicked() {
