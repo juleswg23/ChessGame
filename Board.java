@@ -67,6 +67,8 @@ public class Board extends JPanel implements Serializable
 
   public void newGame() {
     whiteTurn = true;
+    clicked = false;
+    clickedPiece = null;
     // set pawns
     for (int col = 0; col < COLUMNS; col++) {
       // white pawns then black ones
@@ -140,51 +142,44 @@ public class Board extends JPanel implements Serializable
     Piece p = findPiece(new Point(c,r));
 
     if (!clicked && p != null && p.getWhite() == whiteTurn) {
-      p.setClicked(!p.getClicked());
+      p.setClicked(true);
       resetHelper(p);
-    } else {
-      makeMove(p, new Point(c,r));
+    } else if (clicked) {
+      if (makeMove(clickedPiece, new Point(c,r))) {
+        whiteTurn = !whiteTurn;
+        resetHelper(null);
+      } else if (clickedPiece == p) {
+        resetHelper(clickedPiece);
+      }
     }
   }
 
-  // Assumes that piece has been highlighted
-  public void makeMove(Piece p, Point destPos) {
-    int c = destPos.x;
-    int r = destPos.y;
+  // returns true if move was made
+  public boolean makeMove(Piece pieceToMove, Point destPos) {
+    Piece whereToMove = findPiece(destPos);
 
-     if (clicked && p != null) {
-      if (p.getClicked()) { //reset clicked piece
-        p.setClicked(!p.getClicked());
-        resetHelper(null);
-      } else if (clickedPiece.getWhite() != p.getWhite() && clickedPiece.getWhite() == whiteTurn) {
-        if (isLegalCapture(clickedPiece, new Point(c,r)))  {
-          if (!movePiece(new Point(c,r), p)) {
-            clickedPiece.setClicked(false);
-
-            for (int i = 0; i < pieces.size(); i++) {
-              if (pieces.get(i) == p) pieces.remove(i);
-            }
-
-            whiteTurn = !whiteTurn;
-            clickedPiece.setClicked(true);
-            repaint();
-            promotion(clickedPiece, new Point (c,r));
-            clickedPiece.setClicked(false);
-            resetHelper(null);
-          }
+     if (whereToMove != null) {
+      if (whereToMove.equals(pieceToMove)) { //reset clicked piece
+        pieceToMove.setClicked(false);
+        return false;
+      } else if (pieceToMove.getWhite() != whereToMove.getWhite() &&
+                isLegalCapture(pieceToMove, destPos) && movePiece(pieceToMove, destPos)) {
+        //capture so remove captured piece
+        for (int i = 0; i < pieces.size(); i++) {
+          if (pieces.get(i) == whereToMove) pieces.remove(i);
         }
+        repaint();
+        promotion(pieceToMove, destPos);
+        pieceToMove.setClicked(false);
+        return true;
       }
-    } else if (clicked && p == null) {
-      if (isLegal(clickedPiece, new Point(c,r)))  {
-        if (!movePiece(new Point(c,r), null)) {
-          repaint();
-          promotion(clickedPiece, new Point (c,r));
-          clickedPiece.setClicked(false);
-          resetHelper(null);
-          whiteTurn = !whiteTurn;
-        }
-      }
+    } else if (isLegal(pieceToMove, destPos) && movePiece(pieceToMove, destPos)) {
+      repaint();
+      promotion(pieceToMove, destPos);
+      pieceToMove.setClicked(false);
+      return true;
     }
+    return false;
   }
 
   private void resetHelper(Piece p) {
@@ -235,7 +230,7 @@ public class Board extends JPanel implements Serializable
         if (p.position.y == 0) c = "B";
 
         for (int i = 0; i < filePaths.length; i++) {
-          filePaths[i] = "Pictures/" + c + type[i] + ".png";
+          filePaths[i] = "Pictures/" + c + type[i] + "U.png";
         }
 
         ImageIcon[] imageOptions = new ImageIcon[4];
@@ -290,21 +285,44 @@ public class Board extends JPanel implements Serializable
     return false;
   }
 
-  private boolean movePiece(Point destPos, Piece p) {
-    Point oldLocation = new Point(clickedPiece.position.x, clickedPiece.position.y);
-    clickedPiece.position.setLocation(destPos);
+  public boolean movePiece(Piece pieceToMove, Point destPos) {
+    Piece whereToMove = findPiece(destPos);
+    boolean notCheck = !isCheck(pieceToMove, destPos);
+    // if move doesn't lead to check, make move.
+    if (notCheck) {
+      pieceToMove.position.setLocation(destPos);
+      if (whereToMove != null) {
+        for (int i = 0; i < pieces.size(); i++) {
+          if (pieces.get(i) == whereToMove) pieces.remove(i);
+        }
+      }
+    }
+    return notCheck;
+  }
+
+  private boolean isCheck(Piece pieceToMove, Point destPos) {
+    boolean isCheck = false;
+    Piece whereToMove = findPiece(destPos);
+    Point oldLocation = new Point(pieceToMove.position.x, pieceToMove.position.y);
+    //pretend to move the piece to check for checks.
+    pieceToMove.position.setLocation(destPos);
+
+    //pretend to remove if capture.
     for (int i = 0; i < pieces.size(); i++) {
-      if (pieces.get(i) == p) pieces.remove(i);
+      if (pieces.get(i) == whereToMove) pieces.remove(i);
     }
-    System.out.println(check(blackKing));
     if (whiteTurn && check(whiteKing)) {
-      clickedPiece.position.setLocation(oldLocation);
-      return true;
+      isCheck = true;
     } else if (!whiteTurn && check(blackKing)) {
-      clickedPiece.position.setLocation(oldLocation);
-      return true;
+      isCheck = true;
     }
-    return false;
+
+    //reset stuff
+    if (whereToMove != null) {
+      pieces.add(whereToMove);
+    }
+    pieceToMove.position.setLocation(oldLocation);
+    return isCheck;
   }
 
   //GETTERS and SETTERS

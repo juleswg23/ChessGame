@@ -3,7 +3,6 @@
 
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
 import java.awt.Point;
 
 
@@ -39,40 +38,6 @@ public class MultiplayerClient
 		ObjectOutputStream dos = new ObjectOutputStream(s.getOutputStream());
 		ObjectInputStream dis = new ObjectInputStream(s.getInputStream());
 
-		// // sendMessage thread
-		// Thread sendMessage = new Thread(new Runnable() {
-		// 	@Override
-		// 	public void run() {
-		// 		while (true) {
-		//
-		// 			// read the message to deliver.
-		// 			String msg = scn.nextLine();
-		//
-		// 			try {
-		// 				// write on the output stream
-		// 				dos.writeUTF(msg);
-		// 				dos.flush();
-		// 				System.out.println("Sent: " + msg);
-		// 				if (msg.equals("logout")) {
-		// 					break;
-		// 				}
-		// 			} catch (IOException e) {
-		// 				e.printStackTrace();
-		// 			}
-		// 		}
-		//
-		// 		try {
-		// 			// closing resources
-		// 			done = true;
-		// 			dos.close();
-		// 			dis.close();
-		//
-		// 		} catch(IOException e) {
-		// 			e.printStackTrace();
-		// 		}
-		// 	}
-		// });
-
     Thread sendBoard = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -93,35 +58,6 @@ public class MultiplayerClient
 			}
 		});
 
-		// readMessage thread
-		// Thread readMessage = new Thread(new Runnable()
-		// {
-		// 	@Override
-		// 	public void run() {
-		//
-		// 		while (true) {
-		// 			try {
-		// 				// read the message sent to this client
-		// 				if (done) break;
-		// 				String msg = dis.readUTF();
-		// 				System.out.println(msg);
-		// 			} catch (IOException e) {
-		// 				e.printStackTrace();
-		// 			}
-		// 		}
-		//
-		// 		try {
-		// 			// closing resources
-		// 			done = true;
-		// 			dos.close();
-		// 			dis.close();
-		//
-		// 		} catch(IOException e) {
-		// 			e.printStackTrace();
-		// 		}
-		// 	}
-		// });
-
     Thread readBoard = new Thread(new Runnable()
 		{
 			@Override
@@ -133,7 +69,10 @@ public class MultiplayerClient
               break;
             }
 						Board b = (Board) dis.readObject();
+
+						// replace this to display to chess game.
 						System.out.println(b.toString());
+
 					} catch (IOException e) {
 						e.printStackTrace();
 					} catch (ClassNotFoundException e) {
@@ -153,9 +92,7 @@ public class MultiplayerClient
 			}
 		});
 
-		//sendMessage.start();
     sendBoard.start();
-		//readMessage.start();
     readBoard.start();
 
 	}
