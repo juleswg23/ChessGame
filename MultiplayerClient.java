@@ -8,7 +8,7 @@ import java.awt.Point;
 
 public class MultiplayerClient implements Serializable
 {
-	final static int SERVER_PORT = 6789;
+	final static int SERVER_PORT = 6172;
 	public static boolean done = false;
 	Socket s = null;
 	ObjectOutputStream dos;

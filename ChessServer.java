@@ -16,11 +16,10 @@ public class ChessServer
 	// counter for clients
 	static int i = 0;
 	static int MAX_PLAYERS = 2;
+	final static int SERVER_PORT = 6172;
 
 	public static void main(String[] args) throws IOException {
-		// server is listening on port 6789
-		ServerSocket ss = new ServerSocket(6789);
-
+		ServerSocket ss = new ServerSocket(SERVER_PORT);
 		Socket s;
 
 		// running infinite loop for getting
