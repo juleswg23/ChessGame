@@ -91,13 +91,10 @@ class ClientHandler implements Runnable
 
 		while (true) {
 			try {
-				// receive the string
+				// receive the board
 				b = (Board) dis.readUnshared();
 				System.out.println("Received from board: " + this.name);
-				System.out.println(b.toString());
 
-				//received = dis.readUTF();
-				//System.out.println(received);
 
 				if(received.equals("logout")) {
 					//tell other user that this dude logged out
@@ -109,9 +106,8 @@ class ClientHandler implements Runnable
 					// if the recipient is found, write on its
 					// output stream
 					if (!ch.name.equals(name)) {
+						ch.dos.reset();
 						ch.dos.writeObject(b);
-						System.out.println(b.toString());
-						//ch.dos.writeUTF(this.name+" : "+received);
 						ch.dos.flush();
 						System.out.println("sent to board: " + ch.name);
 						break;

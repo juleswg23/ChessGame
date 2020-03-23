@@ -77,7 +77,7 @@ public class MultiplayerClient implements Serializable
               break;
             }
 						//this might not work too hot.
-						Board b = (Board) dis.readObject();
+						Board b = (Board) dis.readUnshared();
 						myBoard.setUpBoard(b.getWhiteTurn(), b.getWhiteKing(), b.getBlackKing(), b.getPieces());
 						System.out.println("Received");
 
@@ -107,7 +107,8 @@ public class MultiplayerClient implements Serializable
 
 	public void sendToServer(Board b) {
 		try {
-			dos.writeUnshared(b);
+			dos.reset();
+			dos.writeObject(b);
 			dos.flush();
 			System.out.println("Sent");
 		} catch (IOException e) {
