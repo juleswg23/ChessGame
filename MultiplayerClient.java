@@ -39,7 +39,7 @@ public class MultiplayerClient implements Serializable
 
 		dos = new ObjectOutputStream(s.getOutputStream());
 		dis = new ObjectInputStream(s.getInputStream());
-		
+
 		play();
 	}
 
@@ -107,8 +107,10 @@ public class MultiplayerClient implements Serializable
 
 	public void sendToServer(Board b) {
 		try {
+			dos = new ObjectOutputStream(s.getOutputStream());
 			dos.writeObject(b);
 			dos.flush();
+			dos.close();
 			System.out.println("Sent");
 		} catch (IOException e) {
 			e.printStackTrace();
