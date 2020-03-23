@@ -341,6 +341,8 @@ public class Board extends JPanel implements Serializable
     setWhiteKing(whiteK);
     setBlackKing(blackK);
     setPieces(p);
+    System.out.println("input: " + p);
+    System.out.println("output: " + pieces);
     setClicked(false);
     setClickedPiece(null);
     repaint();
