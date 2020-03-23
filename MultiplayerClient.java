@@ -6,20 +6,22 @@ import java.net.*;
 import java.awt.Point;
 
 
-public class MultiplayerClient
+public class MultiplayerClient implements Serializable
 {
 	final static int SERVER_PORT = 6789;
 	public static boolean done = false;
 	Socket s = null;
+	ObjectOutputStream dos;
+	ObjectInputStream dis;
+
 	Board myBoard;
 
 	public MultiplayerClient(Board b) throws UnknownHostException, IOException {
 		myBoard = b;
-		play();
-
+		setup();
 	}
 
-	public void play() throws UnknownHostException, IOException {
+	public void setup() throws UnknownHostException, IOException {
 
 		// getting localhost ip
 		InetAddress ip = InetAddress.getByName("localhost");
@@ -35,28 +37,34 @@ public class MultiplayerClient
       }
     }
 
-		ObjectOutputStream dos = new ObjectOutputStream(s.getOutputStream());
-		ObjectInputStream dis = new ObjectInputStream(s.getInputStream());
+		dos = new ObjectOutputStream(s.getOutputStream());
+		dis = new ObjectInputStream(s.getInputStream());
+		play();
+	}
 
-    Thread sendBoard = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				while (true) {
-					try {
-            // make a board and make a move to send.
-						// This will be user input
-						myBoard.makeMove(myBoard.getPieces().get(0), new Point(0,3));
-            dos.writeObject(myBoard);
-            dos.flush();
-						System.out.println("Sent: " + myBoard.toString());
-						//eventually remove break
-            break;
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-		});
+	public void play() {
+
+    // Thread sendBoard = new Thread(new Runnable() {
+		// 	@Override
+		// 	public void run() {
+		// 			while (true) {
+		// 				try {
+		//
+		// 					// make a board and make a move to send.
+		// 					// This will be user input
+		// 					myBoard.makeMove(myBoard.getPieces().get(0), new Point(0,4));
+		//
+	  //           dos.writeObject(myBoard);
+	  //           dos.flush();
+		// 					System.out.println("Sent: " + myBoard.toString());
+		// 					//eventually remove break
+	  //           break;
+		// 				} catch (IOException e) {
+		// 					e.printStackTrace();
+		// 				}
+		// 			}
+		// 	}
+		// });
 
     Thread readBoard = new Thread(new Runnable()
 		{
@@ -68,10 +76,10 @@ public class MultiplayerClient
 						if (done) {
               break;
             }
+						//this might not work too hot.
 						Board b = (Board) dis.readObject();
-
-						// replace this to display to chess game.
-						System.out.println(b.toString());
+						myBoard.setUpBoard(b.getWhiteTurn(), b.getWhiteKing(), b.getBlackKing(), b.getPieces());
+						System.out.println("Received");
 
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -92,9 +100,19 @@ public class MultiplayerClient
 			}
 		});
 
-    sendBoard.start();
+    //sendBoard.start();
     readBoard.start();
 
+	}
+
+	public void sendToServer(Board b) {
+		try {
+			dos.writeObject(b);
+			dos.flush();
+			System.out.println("Sent");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static void main(String args[]) throws UnknownHostException, IOException {

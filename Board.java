@@ -22,10 +22,14 @@ public class Board extends JPanel implements Serializable
   public static final int CELL_SIZE = WIDTH/8;
 
   private boolean clicked = false;
+  private boolean boardClickable = true; //if multiplayer this should be used
   private boolean whiteTurn = true;
   private Piece clickedPiece = null;
   private King whiteKing = new King(new Point(4, 0), true);
   private King blackKing = new King(new Point(4, 7), false);
+
+  private boolean multiplayer = false;
+  transient public MultiplayerClient mc;
 
   private ArrayList<Piece> pieces = new ArrayList<>();
 
@@ -148,6 +152,10 @@ public class Board extends JPanel implements Serializable
       if (makeMove(clickedPiece, new Point(c,r))) {
         whiteTurn = !whiteTurn;
         resetHelper(null);
+        
+        if (multiplayer) {
+          mc.sendToServer(this);
+        }
       } else if (clickedPiece == p) {
         resetHelper(clickedPiece);
       }
@@ -158,7 +166,7 @@ public class Board extends JPanel implements Serializable
   public boolean makeMove(Piece pieceToMove, Point destPos) {
     Piece whereToMove = findPiece(destPos);
 
-     if (whereToMove != null) {
+    if (whereToMove != null) {
       if (whereToMove.equals(pieceToMove)) { //reset clicked piece
         pieceToMove.setClicked(false);
         return false;
@@ -326,6 +334,14 @@ public class Board extends JPanel implements Serializable
   }
 
   //GETTERS and SETTERS
+  public void setUpBoard(boolean wt, King whiteK, King blackK, ArrayList<Piece> p) {
+    setWhiteTurn(wt);
+    setWhiteKing(whiteK);
+    setBlackKing(blackK);
+    setPieces(p);
+    repaint();
+  }
+
   public boolean getClicked() {
     return clicked;
   }
@@ -374,6 +390,14 @@ public class Board extends JPanel implements Serializable
     pieces = p;
   }
 
+  public boolean getMultiplayer() {
+    return multiplayer;
+  }
+
+  public void setMultiplayer(boolean m) {
+    multiplayer = m;
+  }
+
 
   // Just for checks for Serializable stuff
   public String toString() {
@@ -395,6 +419,5 @@ public class Board extends JPanel implements Serializable
     }
     return same;
   }
-
 
 }

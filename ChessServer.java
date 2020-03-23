@@ -87,48 +87,30 @@ class ClientHandler implements Runnable
 	public void run() {
 
 		String received = "";
-		Board b;
 
 		while (true) {
 			try {
 				// receive the string
-				b = (Board) dis.readObject();
-				System.out.println("Received: " + b.toString());
+				Board b = (Board) dis.readObject();
+				System.out.println("Received from board: " + this.name);
 
 				//received = dis.readUTF();
 				//System.out.println(received);
 
 				if(received.equals("logout")) {
 					//tell other user that this dude logged out
-          for (ClientHandler mc : ChessServer.ar) {
-						if (!mc.name.equals(name)) {
-							try {
-								// closing resources
-								mc.isloggedin = false;
-								mc.dis.close();
-								mc.dos.close();
-								mc.s.close();
-
-							}catch(Exception e) {
-								e.printStackTrace();
-							}
-						}
-					}
-					this.isloggedin=false;
-					this.s.close();
-
 					break;
 				}
 				// search for the recipient in the connected devices list.
 				// ar is the vector storing client of active users
-				for (ClientHandler mc : ChessServer.ar) {
+				for (ClientHandler ch : ChessServer.ar) {
 					// if the recipient is found, write on its
 					// output stream
-					if (!mc.name.equals(name)) {
-						mc.dos.writeObject(b);
-						//mc.dos.writeUTF(this.name+" : "+received);
-						mc.dos.flush();
-						System.out.println("sent: " + b.toString());
+					if (!ch.name.equals(name)) {
+						ch.dos.writeObject(b);
+						//ch.dos.writeUTF(this.name+" : "+received);
+						ch.dos.flush();
+						System.out.println("sent to board: " + ch.name);
 						break;
 					}
 				}

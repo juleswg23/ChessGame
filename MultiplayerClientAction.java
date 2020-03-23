@@ -11,9 +11,9 @@ public class MultiplayerClientAction implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    System.out.println("Here");
     try {
-      mc = new MultiplayerClient(b);
+      b.setMultiplayer(true);
+      b.mc = new MultiplayerClient(b);
     } catch (Exception ex) {
       System.out.println("Ran Test");
       TestSerial ts = new TestSerial();
