@@ -294,7 +294,7 @@ public class Board extends JPanel implements Serializable
 
   private boolean check(Piece king) {
     for (Piece p : pieces) {
-      if (p.getWhite() != king.getWhite() &&isLegalCapture(p, king.position)) {
+      if (p.getWhite() != king.getWhite() && isLegalCapture(p, king.position)) {
         return true;
       }
     }
@@ -346,7 +346,7 @@ public class Board extends JPanel implements Serializable
     if ( (whiteTurn && check(whiteKing)) || (!whiteTurn && check(blackKing)) ) {
       for (Piece p : pieces) {
         if (p.getWhite() == whiteTurn) { //only check for white pieces
-          if (p.canStopCheck(pieces)) return false;
+          if (p.canStopCheck(this)) return false;
         }
       }
       // if moving any of the pieces cannot get out of check, it is checkmate

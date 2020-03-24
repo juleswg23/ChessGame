@@ -46,33 +46,16 @@ public class MultiplayerClient implements Serializable
 		oos.flush();
 
 		if (ois.readBoolean()) {
+			// make the dude the color given by the server if the ok is recei by
+			myBoard.setPlayerColorWhite(ois.readBoolean());
+			myBoard.repaint();
 			play();
+		} else {
+			System.out.println("Wrong password");
 		}
 	}
 
 	public void play() {
-
-    // Thread sendBoard = new Thread(new Runnable() {
-		// 	@Override
-		// 	public void run() {
-		// 			while (true) {
-		// 				try {
-		//
-		// 					// make a board and make a move to send.
-		// 					// This will be user input
-		// 					myBoard.makeMove(myBoard.getPieces().get(0), new Point(0,4));
-		//
-	  //           oos.writeObject(myBoard);
-	  //           oos.flush();
-		// 					System.out.println("Sent: " + myBoard.toString());
-		// 					//eventually remove break
-	  //           break;
-		// 				} catch (IOException e) {
-		// 					e.printStackTrace();
-		// 				}
-		// 			}
-		// 	}
-		// });
 
     Thread readBoard = new Thread(new Runnable()
 		{
@@ -107,7 +90,6 @@ public class MultiplayerClient implements Serializable
 			}
 		});
 
-    //sendBoard.start();
     readBoard.start();
 
 	}
