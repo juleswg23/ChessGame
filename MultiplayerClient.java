@@ -85,7 +85,7 @@ public class MultiplayerClient implements Serializable
             }
 						//this might not work too hot.
 						Board b = (Board) ois.readUnshared();
-						myBoard.setUpBoard(b.getWhiteTurn(), b.getWhiteKing(), b.getBlackKing(), b.getPieces());
+						myBoard.setUpBoard(b.getWhiteTurn(), b.getPlayerColorWhite(), b.getWhiteKing(), b.getBlackKing(), b.getPieces());
 						System.out.println("Received");
 
 					} catch (IOException e) {

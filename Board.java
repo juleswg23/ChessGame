@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.Serializable;
+import java.awt.geom.*;
 
 public class Board extends JPanel implements Serializable
 {
@@ -21,6 +22,7 @@ public class Board extends JPanel implements Serializable
   public static final int HEIGHT = 512;
   public static final int CELL_SIZE = WIDTH/8;
 
+  private boolean playerColorWhite = true;
   private boolean clicked = false;
   private boolean boardClickable = true; //if multiplayer this should be used
   private boolean whiteTurn = true;
@@ -64,6 +66,9 @@ public class Board extends JPanel implements Serializable
       try {
         BufferedImage img = ImageIO.read(new File(filePath));
         Image newImage = img.getScaledInstance(CELL_SIZE, CELL_SIZE, Image.SCALE_SMOOTH);
+        if (!playerColorWhite) {
+          y = (p.position.y) * CELL_SIZE;
+        }
         g.drawImage(newImage, x, y, null);
       } catch (Exception e) {
         e.printStackTrace();
@@ -145,6 +150,7 @@ public class Board extends JPanel implements Serializable
   private void clickAction(MouseEvent e) {
     int c = e.getX() / CELL_SIZE;
     int r = 7 - e.getY() / CELL_SIZE;
+    if (!playerColorWhite) r = e.getY() / CELL_SIZE;
     Piece p = findPiece(new Point(c,r));
 
     if (!clicked && p != null && p.getWhite() == whiteTurn) {
@@ -336,13 +342,14 @@ public class Board extends JPanel implements Serializable
   }
 
   //GETTERS and SETTERS
-  public void setUpBoard(boolean wt, King whiteK, King blackK, ArrayList<Piece> p) {
+  public void setUpBoard(boolean wt, boolean pc, King whiteK, King blackK, ArrayList<Piece> p) {
     setWhiteTurn(wt);
     setWhiteKing(whiteK);
     setBlackKing(blackK);
     setPieces(p);
     setClicked(false);
     setClickedPiece(null);
+    setPlayerColorWhite(!pc);
     repaint();
     System.out.println("updated board");
   }
@@ -403,6 +410,13 @@ public class Board extends JPanel implements Serializable
     multiplayer = m;
   }
 
+  public void setPlayerColorWhite(boolean c) {
+    playerColorWhite = c;
+  }
+
+  public boolean getPlayerColorWhite() {
+    return playerColorWhite;
+  }
 
   // Just for checks for Serializable stuff
   public String toString() {
