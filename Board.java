@@ -125,7 +125,7 @@ public class Board extends JPanel implements Serializable
 
         @Override
         public void mousePressed(MouseEvent e) {
-          clickAction(e);
+          if (multiplayer && whiteTurn == playerColorWhite) clickAction(e);
         }
 
         @Override
