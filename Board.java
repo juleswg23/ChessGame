@@ -335,6 +335,19 @@ public class Board extends JPanel implements Serializable
     return isCheck;
   }
 
+  private boolean isCheckmate() {
+    //has to run once turn is white, after black move has occured (or vice versa)
+    if ( (whiteTurn && check(whiteKing)) || (!whiteTurn && check(blackKing)) ) {
+      for (Piece p : pieces) {
+        if (p.getWhite() == whiteTurn) { //only check for white pieces
+          if (p.canStopCheck(pieces)) return false;
+        }
+      }
+      // if moving any of the pieces cannot get out of check, it is checkmate
+      return true;
+    } else return false;
+  }
+
   //GETTERS and SETTERS
   public void setUpBoard(boolean wt, King whiteK, King blackK, ArrayList<Piece> p) {
     setWhiteTurn(wt);
