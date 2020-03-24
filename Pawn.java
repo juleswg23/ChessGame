@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Pawn extends Piece
 {
-  
+
   public Pawn(Point p, boolean t) {
     position = new Point(p);
     setWhite(t);
@@ -57,6 +57,11 @@ public class Pawn extends Piece
     if (position.x == toMove.x) arr.add(toMove);
 
     return arr;
+  }
+
+  public ArrayList<Point> possibleMoves() {
+    ArrayList<Point> moves = new ArrayList<Point>();
+    return moves;
   }
 
 }

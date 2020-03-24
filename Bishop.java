@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Bishop extends Piece
 {
-  
+
   public Bishop(Point p, boolean t) {
     position = new Point(p);
     setWhite(t);
@@ -33,6 +33,11 @@ public class Bishop extends Piece
     }
 
     return arr;
+  }
+
+  public ArrayList<Point> possibleMoves() {
+    ArrayList<Point> moves = new ArrayList<Point>();
+    return moves;
   }
 
 }

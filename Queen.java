@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Queen extends Piece
 {
-  
+
   public Queen(Point p, boolean t) {
     position = new Point(p);
     setWhite(t);
@@ -44,6 +44,11 @@ public class Queen extends Piece
       j += yStep;
     }
     return arr;
+  }
+
+  public ArrayList<Point> possibleMoves() {
+    ArrayList<Point> moves = new ArrayList<Point>();
+    return moves;
   }
 
 }

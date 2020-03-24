@@ -316,7 +316,7 @@ public class Board extends JPanel implements Serializable
     return notCheck;
   }
 
-  private boolean isCheck(Piece pieceToMove, Point destPos) {
+  public boolean isCheck(Piece pieceToMove, Point destPos) {
     boolean isCheck = false;
     Piece whereToMove = findPiece(destPos);
     Point oldLocation = new Point(pieceToMove.position.x, pieceToMove.position.y);

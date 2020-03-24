@@ -26,10 +26,15 @@ public class Knight extends Piece
     if (getWhite()) str = "WN";
     if (getClicked()) str += "H";
     else str += "U";
-// this is new but not needed
     str += position.x;
     str += position.y;
     return str;
+  }
+
+  public ArrayList<Point> possibleMoves() {
+    ArrayList<Point> moves = new ArrayList<Point>();
+
+    return moves;
   }
 
 }

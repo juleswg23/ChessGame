@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public class Rook extends Piece
 {
-  
+
   public Rook(Point p, boolean t) {
     position = new Point(p);
     setWhite(t);
@@ -38,6 +38,11 @@ public class Rook extends Piece
       j += yStep;
     }
     return arr;
+  }
+
+  public ArrayList<Point> possibleMoves() {
+    ArrayList<Point> moves = new ArrayList<Point>();
+    return moves;
   }
 
 }
