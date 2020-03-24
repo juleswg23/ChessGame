@@ -294,7 +294,7 @@ public class Board extends JPanel implements Serializable
 
   private boolean check(Piece king) {
     for (Piece p : pieces) {
-      if (p.getWhite() != king.getWhite() &&isLegalCapture(p, king.position)) {
+      if (p.getWhite() != king.getWhite() && isLegalCapture(p, king.position)) {
         return true;
       }
     }
@@ -339,6 +339,19 @@ public class Board extends JPanel implements Serializable
     }
     pieceToMove.position.setLocation(oldLocation);
     return isCheck;
+  }
+
+  private boolean isCheckmate() {
+    //has to run once turn is white, after black move has occured (or vice versa)
+    if ( (whiteTurn && check(whiteKing)) || (!whiteTurn && check(blackKing)) ) {
+      for (Piece p : pieces) {
+        if (p.getWhite() == whiteTurn) { //only check for white pieces
+          if (p.canStopCheck(this)) return false;
+        }
+      }
+      // if moving any of the pieces cannot get out of check, it is checkmate
+      return true;
+    } else return false;
   }
 
   //GETTERS and SETTERS

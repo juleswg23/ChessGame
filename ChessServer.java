@@ -35,15 +35,18 @@ public class ChessServer
 			ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
 			ObjectInputStream ois = new ObjectInputStream(s.getInputStream());
 
-
 			System.out.println("Creating a new handler for this client...");
 
 			// Create a new handler object for handling this request.
 			ClientHandler ch = new ClientHandler(s,"client " + i, ois, oos);
 
-			System.out.println("got here");
 			if (ch.ois.readUTF().equals(PASSWORD)) {
 				ch.oos.writeBoolean(true);
+				ch.oos.flush();
+
+				//send color
+				ch.oos.reset();
+				ch.oos.writeBoolean(i == 0);
 				ch.oos.flush();
 
 				// Create a new Thread with this object.
