@@ -31,6 +31,7 @@ public class Board extends JPanel implements Serializable
   private King blackKing = new King(new Point(4, 7), false);
 
   private boolean multiplayer = false;
+  private boolean closeConnection = false;
   transient public MultiplayerClient mc;
 
   private ArrayList<Piece> pieces = new ArrayList<>();
@@ -440,6 +441,14 @@ public class Board extends JPanel implements Serializable
 
   public boolean getPlayerColorWhite() {
     return playerColorWhite;
+  }
+
+  public void setCloseConnection(boolean cc) {
+    closeConnection = cc;
+  }
+
+  public boolean getCloseConnection() {
+    return closeConnection;
   }
 
   // Just for checks for Serializable stuff
