@@ -14,7 +14,7 @@ public class ChessServer
 	static Vector<ClientHandler> ar = new Vector<>();
 
 	// counter for clients
-	static int i = 0;
+	static int i = 1;
 	static int MAX_PLAYERS = 2;
 	final static int SERVER_PORT = 6172;
 	private final static String PASSWORD = "jandschess";
@@ -25,7 +25,7 @@ public class ChessServer
 
 		// running infinite loop for getting
 		// client request
-		while (i < MAX_PLAYERS)
+		while (i <= MAX_PLAYERS)
 		{
 			// Accept the incoming request
 			s = ss.accept();
@@ -38,7 +38,7 @@ public class ChessServer
 			System.out.println("Creating a new handler for this client...");
 
 			// Create a new handler object for handling this request.
-			ClientHandler ch = new ClientHandler(s,"client " + i, ois, oos);
+			ClientHandler ch = new ClientHandler(s,"Player " + i, ois, oos);
 
 			if (ch.ois.readUTF().equals(PASSWORD)) {
 				ch.oos.writeBoolean(true);
@@ -79,7 +79,6 @@ class ClientHandler implements Runnable
 	public final ObjectInputStream ois;
 	public final ObjectOutputStream oos;
 	private Socket s;
-	public boolean isloggedin;
 	private Board b;
 
 	// constructor
@@ -89,25 +88,16 @@ class ClientHandler implements Runnable
 		this.oos = oos;
 		this.name = name;
 		this.s = s;
-		this.isloggedin=true;
 	}
 
 	@Override
 	public void run() {
-
-		String received = "";
-
 		while (true) {
 			try {
 				// receive the board
 				b = (Board) ois.readUnshared();
-				System.out.println("Received from board: " + this.name);
+				System.out.println("Received from: " + this.name);
 
-
-				if(received.equals("logout")) {
-					//tell other user that this dude logged out
-					break;
-				}
 				// search for the recipient in the connected devices list.
 				// ar is the vector storing client of active users
 				for (ClientHandler ch : ChessServer.ar) {
@@ -117,9 +107,15 @@ class ClientHandler implements Runnable
 						ch.oos.reset();
 						ch.oos.writeObject(b);
 						ch.oos.flush();
-						System.out.println("sent to board: " + ch.name);
+						System.out.println("Sent to: " + ch.name);
 						break;
 					}
+				}
+
+				if (b.getCloseConnection()) {
+					System.out.println("User: " + this.name + " disconnected");
+					//tell other user that this dude logged out
+					break;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -130,10 +126,7 @@ class ClientHandler implements Runnable
 		}
 		try {
 			// closing resources
-			this.ois.close();
-			this.oos.close();
 			this.s.close();
-
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
