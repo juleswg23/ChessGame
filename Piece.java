@@ -24,12 +24,12 @@ abstract class Piece implements Serializable
       Piece pieceToCapture = b.findPiece(destPos);
       // if any one move gets out of check, we can get out of check
       if (pieceToCapture == null) {
-        if (b.isLegal(this, destPos) && b.isCheck(this, destPos, pieceToCapture)) {
-
+        if (b.isLegal(this, destPos) && !b.isCheck(this, destPos, pieceToCapture)) {
+          return true;
         }
       } else if (this.getWhite() != pieceToCapture.getWhite() &&
                 b.isLegalCapture(this, destPos) && b.movePiece(this, destPos, pieceToCapture)) {
-
+          return true;
       }
     }
     return false;

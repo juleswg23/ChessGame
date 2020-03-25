@@ -126,6 +126,7 @@ public class Board extends JPanel implements Serializable
         @Override
         public void mousePressed(MouseEvent e) {
           if (multiplayer && whiteTurn == playerColorWhite) clickAction(e);
+          else if (!multiplayer) clickAction(e);
         }
 
         @Override
@@ -148,15 +149,12 @@ public class Board extends JPanel implements Serializable
 
   // put comments at some point
   private void clickAction(MouseEvent e) {
-    System.out.println("iii")
     int c = e.getX() / CELL_SIZE;
     int r = 7 - e.getY() / CELL_SIZE;
     if (!playerColorWhite) r = e.getY() / CELL_SIZE;
     Piece p = findPiece(new Point(c,r));
-    System.out.println("yo");
 
     if (!clicked && p != null && p.getWhite() == whiteTurn) {
-      System.out.println("hi");
       p.setClicked(true);
       resetHelper(p);
     } else if (clicked) {
