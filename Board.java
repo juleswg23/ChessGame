@@ -29,6 +29,7 @@ public class Board extends JPanel implements Serializable
   private Piece clickedPiece = null;
   private King whiteKing = new King(new Point(4, 0), true);
   private King blackKing = new King(new Point(4, 7), false);
+  private Notation moves = new Notation();
 
   private boolean multiplayer = false;
   private boolean closeConnection = false;
@@ -191,12 +192,18 @@ public class Board extends JPanel implements Serializable
           if (pieces.get(i) == pieceToCapture) pieces.remove(i);
         }
         repaint();
+        if ((whiteTurn && check(blackKing)) || (!whiteTurn && check(whiteKing))) {
+          moves.add(pieceToMove, destPos, true, true);
+        } else {
+          moves.add(pieceToMove, destPos, true);
+        }
         promotion(pieceToMove, destPos);
         pieceToMove.setClicked(false);
         return true;
       }
     } else if (isLegal(pieceToMove, destPos) && movePiece(pieceToMove, destPos, pieceToCapture)) {
       repaint();
+      moves.add(pieceToMove, destPos, false);
       promotion(pieceToMove, destPos);
       pieceToMove.setClicked(false);
       return true;
@@ -449,6 +456,14 @@ public class Board extends JPanel implements Serializable
 
   public boolean getCloseConnection() {
     return closeConnection;
+  }
+
+  public void resetMoves() {
+    moves.clear();
+  }
+
+  public Notation getMoves() {
+    return moves;
   }
 
   // Just for checks for Serializable stuff

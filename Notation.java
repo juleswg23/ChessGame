@@ -7,19 +7,23 @@ public class Notation {
     moves = new ArrayList<>();
   }
 
-  public void addMove(Piece p, Point destPos, Boolean capture) {
+  public void add(Piece p, Point destPos, Boolean capture) {
     Move m = new Move(p, destPos, capture);
     moves.add(m);
   }
 
-  public void addMove(Piece p, Point destPos, Boolean capture, Boolean check) {
+  public void add(Piece p, Point destPos, Boolean capture, Boolean check) {
     Move m = new Move(p, destPos, capture, check);
     moves.add(m);
   }
 
-  public void addMove(Piece p, Point destPos, Boolean capture, Boolean check, Boolean mate) {
+  public void add(Piece p, Point destPos, Boolean capture, Boolean check, Boolean mate) {
     Move m = new Move(p, destPos, capture, check, mate);
     moves.add(m);
+  }
+
+  public void clear() {
+    moves.clear();
   }
 
   @Override

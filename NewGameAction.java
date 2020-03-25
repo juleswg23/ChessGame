@@ -8,6 +8,8 @@ public class NewGameAction implements ActionListener {
   }
   @Override
   public void actionPerformed(ActionEvent e) {
+    System.out.println(b.getMoves());
+    b.resetMoves();
     b.clearArrayList();
     b.newGame();
     b.repaint();

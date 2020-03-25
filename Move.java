@@ -24,8 +24,10 @@ public class Move {
         move += "N";
         break;
       case "Pawn":
-        char f = (char) (a + p.position.getX());
-        move += f;
+        if (capture) {
+          char f = (char) (a + p.position.getX());
+          move += f;
+        }
     }
     if (capture) move += "x";
 
@@ -48,17 +50,5 @@ public class Move {
   @Override
   public String toString() {
     return move;
-  }
-
-  public static void main(String[] args) {
-    Notation n = new Notation();
-    Pawn p = new Pawn(new Point(0,1), true);
-    n.addMove(p, new Point(1,2), true, true, true);
-    n.addMove(p, new Point(1,2), true, true, true);
-    n.addMove(p, new Point(1,2), true, true, true);
-    n.addMove(p, new Point(1,2), true, true, true);
-    n.addMove(p, new Point(1,2), true, true, true);
-
-    System.out.println(n);
   }
 }
