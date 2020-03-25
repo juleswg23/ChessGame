@@ -28,7 +28,7 @@ abstract class Piece implements Serializable
           return true;
         }
       } else if (this.getWhite() != pieceToCapture.getWhite() &&
-                b.isLegalCapture(this, destPos) && b.movePiece(this, destPos, pieceToCapture)) {
+                b.isLegalCapture(this, destPos) && !b.isCheck(this, destPos, pieceToCapture)) {
           return true;
       }
     }
