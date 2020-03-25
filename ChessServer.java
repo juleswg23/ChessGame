@@ -96,13 +96,8 @@ class ClientHandler implements Runnable
 			try {
 				// receive the board
 				b = (Board) ois.readUnshared();
-				System.out.println("Received from board: " + this.name);
+				System.out.println("Received from: " + this.name);
 
-				if (b.getCloseConnection()) {
-					System.out.println("User: " + this.name + " disconnected");
-					//tell other user that this dude logged out
-					break;
-				}
 				// search for the recipient in the connected devices list.
 				// ar is the vector storing client of active users
 				for (ClientHandler ch : ChessServer.ar) {
@@ -112,9 +107,15 @@ class ClientHandler implements Runnable
 						ch.oos.reset();
 						ch.oos.writeObject(b);
 						ch.oos.flush();
-						System.out.println("sent to board: " + ch.name);
+						System.out.println("Sent to: " + ch.name);
 						break;
 					}
+				}
+
+				if (b.getCloseConnection()) {
+					System.out.println("User: " + this.name + " disconnected");
+					//tell other user that this dude logged out
+					break;
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
