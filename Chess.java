@@ -8,6 +8,12 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 
+//run in command line to create jar file:
+//jar cmf Chess.mf Chess.jar *.class pictures
+
+//run in command line to run jar file
+//java -jar Chess.jar
+
 public class Chess
 {
 

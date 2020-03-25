@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Created-By: Jules and Stefan Walzer-Goldfeld
+Main-Class: Chess

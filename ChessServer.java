@@ -138,7 +138,7 @@ class ClientHandler implements Runnable
 				}
 
 			} catch (IOException e) {
-				System.out.println("Trying to read?");
+				System.out.println("Trying to read");
 				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
