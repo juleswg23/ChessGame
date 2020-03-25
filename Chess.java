@@ -17,7 +17,7 @@ public class Chess
   public static void main(String[] args) {
     System.setProperty("apple.laf.useScreenMenuBar", "true");
     System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
-  
+
     JFrame frame = new JFrame("Chess");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setResizable(false);
@@ -46,7 +46,10 @@ public class Chess
     WindowListener windowListener = new WindowAdapter(){
       @Override
       public void windowClosing(WindowEvent w) {
-        System.out.println("Hello");
+        if (b.getMultiplayer()) {
+          b.setCloseConnection(true);
+          b.mc.sendToServer(b);
+        }
       }
     };
 
