@@ -33,7 +33,11 @@ public class Knight extends Piece
 
   public ArrayList<Point> possibleMoves() {
     ArrayList<Point> moves = new ArrayList<Point>();
-
+    for (int i = -2; i <= 2; i++) {
+      for (int j = -2; j <= 2; j++) {
+        if (Math.abs(i*j) == 2) moves.add(new Point(i,j));
+      }
+    }
     return moves;
   }
 

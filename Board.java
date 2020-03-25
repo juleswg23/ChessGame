@@ -162,6 +162,10 @@ public class Board extends JPanel implements Serializable
         whiteTurn = !whiteTurn;
         resetHelper(null);
 
+        System.out.println("before checking for mate");
+        if (isCheckmate()) System.out.println("there is mate");
+        System.out.println("after checking for mate");
+
         if (multiplayer) {
           mc.sendToServer(this);
         }

@@ -48,7 +48,22 @@ public class Queen extends Piece
 
   public ArrayList<Point> possibleMoves() {
     ArrayList<Point> moves = new ArrayList<Point>();
+
+    for (int rowInc = -1; rowInc <= 1; rowInc++) {
+      for (int colInc = -1; colInc <= 1; colInc++) {
+        int i = 1;
+        int j = 1;
+        if (colInc == 0 && rowInc == 0) continue;
+        while (position.x + (rowInc * i) <= 7 && position.y + (colInc * j) <= 7 &&
+               position.x + (rowInc * i) >= 0 && position.y + (colInc * j) >= 0) {
+          moves.add(new Point(position.x + (rowInc * i), position.y + (colInc * j)));
+          i++;
+          j++;
+        }
+      }
+    }
     return moves;
   }
+
 
 }
