@@ -61,10 +61,17 @@ public class Pawn extends Piece
 
   public ArrayList<Point> possibleMoves() {
     ArrayList<Point> moves = new ArrayList<Point>();
-    moves.add(new Point(position.x, position.y+1));
-    moves.add(new Point(position.x, position.y+2));
-    moves.add(new Point(position.x-1, position.y+1));
-    moves.add(new Point(position.x+1, position.y+1));
+    if (getWhite()) {
+      moves.add(new Point(position.x, position.y+1));
+      moves.add(new Point(position.x, position.y+2));
+      moves.add(new Point(position.x-1, position.y+1));
+      moves.add(new Point(position.x+1, position.y+1));
+    } else {
+      moves.add(new Point(position.x, position.y-1));
+      moves.add(new Point(position.x, position.y-2));
+      moves.add(new Point(position.x-1, position.y-1));
+      moves.add(new Point(position.x+1, position.y-1));
+    }
     return moves;
   }
 
