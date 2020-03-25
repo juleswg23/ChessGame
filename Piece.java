@@ -20,9 +20,17 @@ abstract class Piece implements Serializable
 
   public boolean canStopCheck(Board b) {
     ArrayList<Point> possibleMoves = this.possibleMoves();
-    for (Point pointToTest : possibleMoves) {
-      // if move gets out of check, we can get out of check
-      if (!b.isCheck(this, pointToTest)) return true;
+    for (Point destPos : possibleMoves) {
+      Piece pieceToCapture = b.findPiece(destPos);
+      // if any one move gets out of check, we can get out of check
+      if (pieceToCapture == null) {
+        if (b.isLegal(this, destPos) && b.isCheck(this, destPos, pieceToCapture)) {
+
+        }
+      } else if (this.getWhite() != pieceToCapture.getWhite() &&
+                b.isLegalCapture(this, destPos) && b.movePiece(this, destPos, pieceToCapture)) {
+
+      }
     }
     return false;
   }

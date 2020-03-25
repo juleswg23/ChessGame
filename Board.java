@@ -148,12 +148,15 @@ public class Board extends JPanel implements Serializable
 
   // put comments at some point
   private void clickAction(MouseEvent e) {
+    System.out.println("iii")
     int c = e.getX() / CELL_SIZE;
     int r = 7 - e.getY() / CELL_SIZE;
     if (!playerColorWhite) r = e.getY() / CELL_SIZE;
     Piece p = findPiece(new Point(c,r));
+    System.out.println("yo");
 
     if (!clicked && p != null && p.getWhite() == whiteTurn) {
+      System.out.println("hi");
       p.setClicked(true);
       resetHelper(p);
     } else if (clicked) {
@@ -172,24 +175,24 @@ public class Board extends JPanel implements Serializable
 
   // returns true if move was made
   public boolean makeMove(Piece pieceToMove, Point destPos) {
-    Piece whereToMove = findPiece(destPos);
+    Piece pieceToCapture = findPiece(destPos);
 
-    if (whereToMove != null) {
-      if (whereToMove.equals(pieceToMove)) { //reset clicked piece
+    if (pieceToCapture != null) {
+      if (pieceToCapture.equals(pieceToMove)) { //reset clicked piece
         pieceToMove.setClicked(false);
         return false;
-      } else if (pieceToMove.getWhite() != whereToMove.getWhite() &&
-                isLegalCapture(pieceToMove, destPos) && movePiece(pieceToMove, destPos)) {
+      } else if (pieceToMove.getWhite() != pieceToCapture.getWhite() &&
+                isLegalCapture(pieceToMove, destPos) && movePiece(pieceToMove, destPos, pieceToCapture)) {
         //capture so remove captured piece
         for (int i = 0; i < pieces.size(); i++) {
-          if (pieces.get(i) == whereToMove) pieces.remove(i);
+          if (pieces.get(i) == pieceToCapture) pieces.remove(i);
         }
         repaint();
         promotion(pieceToMove, destPos);
         pieceToMove.setClicked(false);
         return true;
       }
-    } else if (isLegal(pieceToMove, destPos) && movePiece(pieceToMove, destPos)) {
+    } else if (isLegal(pieceToMove, destPos) && movePiece(pieceToMove, destPos, pieceToCapture)) {
       repaint();
       promotion(pieceToMove, destPos);
       pieceToMove.setClicked(false);
@@ -301,32 +304,38 @@ public class Board extends JPanel implements Serializable
     return false;
   }
 
-  public boolean movePiece(Piece pieceToMove, Point destPos) {
-    Piece whereToMove = findPiece(destPos);
-    boolean notCheck = !isCheck(pieceToMove, destPos);
+  public boolean movePiece(Piece pieceToMove, Point destPos, Piece pieceToCapture) {
+    boolean notCheck = !isCheck(pieceToMove, destPos, pieceToCapture);
     // if move doesn't lead to check, make move.
     if (notCheck) {
       pieceToMove.position.setLocation(destPos);
-      if (whereToMove != null) {
+      //remove captured piece.
+      if (pieceToCapture != null) {
         for (int i = 0; i < pieces.size(); i++) {
-          if (pieces.get(i) == whereToMove) pieces.remove(i);
+          if (pieces.get(i) == pieceToCapture) pieces.remove(i);
         }
       }
     }
     return notCheck;
   }
 
-  public boolean isCheck(Piece pieceToMove, Point destPos) {
+  public boolean isCheck(Piece pieceToMove, Point destPos, Piece pieceToCapture) {
     boolean isCheck = false;
-    Piece whereToMove = findPiece(destPos);
     Point oldLocation = new Point(pieceToMove.position.x, pieceToMove.position.y);
     //pretend to move the piece to check for checks.
     pieceToMove.position.setLocation(destPos);
 
     //pretend to remove if capture.
-    for (int i = 0; i < pieces.size(); i++) {
-      if (pieces.get(i) == whereToMove) pieces.remove(i);
+    if (pieceToCapture != null) {
+      for (int i = 0; i < pieces.size(); i++) {
+        if (pieces.get(i) == pieceToCapture) {
+          pieces.remove(i);
+          break;
+        }
+      }
     }
+
+    // check for checks
     if (whiteTurn && check(whiteKing)) {
       isCheck = true;
     } else if (!whiteTurn && check(blackKing)) {
@@ -334,8 +343,8 @@ public class Board extends JPanel implements Serializable
     }
 
     //reset stuff
-    if (whereToMove != null) {
-      pieces.add(whereToMove);
+    if (pieceToCapture != null) {
+      pieces.add(pieceToCapture);
     }
     pieceToMove.position.setLocation(oldLocation);
     return isCheck;
