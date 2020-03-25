@@ -15,7 +15,9 @@ public class Chess
   public static final int HEIGHT = 512;
 
   public static void main(String[] args) {
-
+    System.setProperty("apple.laf.useScreenMenuBar", "true");
+    System.setProperty("apple.eawt.quitStrategy", "CLOSE_ALL_WINDOWS");
+  
     JFrame frame = new JFrame("Chess");
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setResizable(false);
@@ -38,8 +40,17 @@ public class Chess
     menu.add(multiplayerGame);
 
     mb.add(menu);
-    System.setProperty("apple.laf.useScreenMenuBar", "true");
+
     frame.setJMenuBar(mb);
+
+    WindowListener windowListener = new WindowAdapter(){
+      @Override
+      public void windowClosing(WindowEvent w) {
+        System.out.println("Hello");
+      }
+    };
+
+    frame.addWindowListener(windowListener);
 
     frame.setVisible(true);
   }
