@@ -49,6 +49,8 @@ public class MultiplayerClient implements Serializable
 			// make the dude the color given by the server if the ok is recei by
 			myBoard.setPlayerColorWhite(ois.readBoolean());
 			myBoard.repaint();
+			System.out.println("Successfully connected to server");
+			// put info about whether or not in multiplayer.
 			play();
 		} else {
 			System.out.println("Wrong password");
@@ -63,13 +65,16 @@ public class MultiplayerClient implements Serializable
 			public void run() {
 				while (true) {
 					try {
-						if (done) {
-              break;
-            }
 						//this might not work too hot.
 						Board b = (Board) ois.readUnshared();
 						myBoard.setUpBoard(b.getWhiteTurn(), b.getPlayerColorWhite(), b.getWhiteKing(), b.getBlackKing(), b.getPieces());
 						System.out.println("Received");
+
+						if (b.getCloseConnection()) {
+							System.out.println("Your opponent closed the connection.");
+							sendToServer(b);
+							break;
+						}
 
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -77,21 +82,10 @@ public class MultiplayerClient implements Serializable
             e.printStackTrace();
           }
 				}
-
-				try {
-					// closing resources
-					done = true;
-					oos.close();
-					ois.close();
-
-				} catch(IOException e) {
-					e.printStackTrace();
-				}
 			}
 		});
 
     readBoard.start();
-
 	}
 
 	public void sendToServer(Board b) {
@@ -103,6 +97,15 @@ public class MultiplayerClient implements Serializable
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		if (b.getCloseConnection()) {
+			try {
+				System.out.println("You closed the connection.");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 	public static void main(String args[]) throws UnknownHostException, IOException {

@@ -13,22 +13,23 @@ public class ChessServer
 	// Vector to store active clients
 	static Vector<ClientHandler> ar = new Vector<>();
 
-	// counter for clients
-	static int i = 1;
-	static int MAX_PLAYERS = 2;
+	private int openConnections = 1;
+	final static int MAX_PLAYERS = 2;
 	final static int SERVER_PORT = 6172;
 	private final static String PASSWORD = "jandschess";
+	private static ServerSocket ss;
 
-	public static void main(String[] args) throws IOException {
-		ServerSocket ss = new ServerSocket(SERVER_PORT);
-		Socket s;
+	public ChessServer() throws IOException {
+		ss = new ServerSocket(SERVER_PORT);
+	}
 
-		// running infinite loop for getting
-		// client request
-		while (i <= MAX_PLAYERS)
+	public void runServer() throws IOException {
+
+		// running infinite loop for getting client request
+		while (openConnections <= MAX_PLAYERS)
 		{
 			// Accept the incoming request
-			s = ss.accept();
+			Socket s = ss.accept();
 
 			System.out.println("New client request received : " + s);
 
@@ -38,7 +39,7 @@ public class ChessServer
 			System.out.println("Creating a new handler for this client...");
 
 			// Create a new handler object for handling this request.
-			ClientHandler ch = new ClientHandler(s,"Player " + i, ois, oos);
+			ClientHandler ch = new ClientHandler(s, "player " + openConnections, ois, oos, this);
 
 			if (ch.ois.readUTF().equals(PASSWORD)) {
 				ch.oos.writeBoolean(true);
@@ -46,29 +47,44 @@ public class ChessServer
 
 				//send color
 				ch.oos.reset();
-				ch.oos.writeBoolean(i == 0);
+				ch.oos.writeBoolean(openConnections == 1);
 				ch.oos.flush();
 
 				// Create a new Thread with this object.
 				Thread t = new Thread(ch);
-
 				System.out.println("Adding this client to active client list");
 
 				// add this client to active clients list
 				ar.add(ch);
-
 				// start the thread.
 				t.start();
-
-				// increment i for new client.
-				// i is used for naming only, and can be replaced
-				// by any naming scheme
-				System.out.println(ar);
-				i++;
+				openConnections++;
 			}
-
 		}
+
+		while (openConnections > 0) {
+			//do some closing?
+			openConnections--;
+		}
+
 	}
+
+	// public void closeThread(String name) {
+	// 	System.out.println("Closing thread of: " + name);
+	// 	System.out.println(Thread.currentThread().getThreadGroup());
+	// 	System.out.println(Thread.currentThread());
+	// 	Thread.currentThread().interrupt();
+	// 	System.out.println("Did it work? " + name);
+	// 	System.out.println(Thread.currentThread().getThreadGroup());
+	// 	System.out.println(Thread.currentThread());
+	//
+	// }
+
+	public static void main(String[] args) throws IOException {
+		ChessServer cs = new ChessServer();
+		cs.runServer();
+	}
+
 }
 
 // ClientHandler class
@@ -80,19 +96,22 @@ class ClientHandler implements Runnable
 	public final ObjectOutputStream oos;
 	private Socket s;
 	private Board b;
+	private ChessServer server;
+	static boolean running;
 
 	// constructor
-	public ClientHandler(Socket s, String name,
-							ObjectInputStream ois, ObjectOutputStream oos) {
+	public ClientHandler(Socket s, String name, ObjectInputStream ois, ObjectOutputStream oos, ChessServer cs) {
 		this.ois = ois;
 		this.oos = oos;
 		this.name = name;
 		this.s = s;
+		this.server = cs;
+		running = true;
 	}
 
 	@Override
 	public void run() {
-		while (true) {
+		while (running) {
 			try {
 				// receive the board
 				b = (Board) ois.readUnshared();
@@ -108,27 +127,30 @@ class ClientHandler implements Runnable
 						ch.oos.writeObject(b);
 						ch.oos.flush();
 						System.out.println("Sent to: " + ch.name);
+
 						break;
 					}
 				}
 
 				if (b.getCloseConnection()) {
-					System.out.println("User: " + this.name + " disconnected");
-					//tell other user that this dude logged out
-					break;
+					this.closeConnection();
+					running = false;
 				}
+
 			} catch (IOException e) {
+				System.out.println("Trying to read?");
 				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
 		}
-		try {
-			// closing resources
-			this.s.close();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
 	}
+
+	public void closeConnection() throws IOException {
+		this.s.close();
+		ChessServer.ar.remove(this);
+		System.out.println(this.name + " disconnected");
+	}
+
 }
