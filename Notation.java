@@ -1,8 +1,12 @@
 import java.awt.*;
 import java.util.*;
+import java.io.Serializable;
 
-public class Notation {
+
+public class Notation implements Serializable
+{
   ArrayList<Move> moves;
+
   public Notation() {
     moves = new ArrayList<>();
   }

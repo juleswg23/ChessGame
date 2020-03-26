@@ -1,7 +1,11 @@
 import java.awt.*;
 import java.util.*;
+import java.io.Serializable;
 
-public class Move {
+
+public class Move implements Serializable
+{
+  
   String move = "";
   final int a = (char) 'a';
 
